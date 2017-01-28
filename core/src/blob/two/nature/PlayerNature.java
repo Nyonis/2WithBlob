@@ -78,10 +78,10 @@ public class PlayerNature extends Group implements KeyPressHandler {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if (System.currentTimeMillis() > start + ON_TIME) {
+        if (!spaceAble && System.currentTimeMillis() > start + ON_TIME) {
             setHittable(false);
         }
-        if(System.currentTimeMillis() > start + WAIT_TIME){
+        if(!spaceAble && System.currentTimeMillis() > start + WAIT_TIME){
             spaceAble = true;
         }
     }
@@ -128,9 +128,9 @@ public class PlayerNature extends Group implements KeyPressHandler {
     }
 
     public void setHittable(boolean hittable) {
-        System.out.println(fDef.filter.groupIndex);
         Fixture f = hitbox.getFixtureList().get(0);
         Filter fi = f.getFilterData();
+
 
         if (hittable) {
             fi.groupIndex = 1;

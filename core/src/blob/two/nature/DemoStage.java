@@ -2,9 +2,12 @@ package blob.two.nature;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
 import helper.MapConvertHelper;
@@ -18,6 +21,14 @@ public class DemoStage extends GameStage {
     private float move = 1f;
 
     public MyInput input;
+
+    public void makeEatMes(){
+        PolygonShape s = new PolygonShape();
+        s.setAsBox(40,40);
+        Item a = new Item(b2dWorld, s, new Texture("kugel.png"));
+        a.setPos(300,500);
+        addActor(a);
+    }
 
     public DemoStage(NatureBlobGame game) {
         super(game, "TestWorld2.tmx");
@@ -75,6 +86,9 @@ public class DemoStage extends GameStage {
         input.addHandler(Input.Keys.SPACE, playerNature);
 
         Gdx.input.setInputProcessor(input);
+
+
+        makeEatMes();
 
     }
 

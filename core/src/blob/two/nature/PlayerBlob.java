@@ -40,25 +40,22 @@ public class PlayerBlob extends Group {
     }
 
     private void createBody(Shape b2dFigureShape, World b2dWorld) {
-        BodyDef figureBodyDef = new BodyDef();
+        BodyDef bDef = new BodyDef();
 
-        figureBodyDef.type = BodyType.DynamicBody;
+        bDef.type = BodyType.DynamicBody;
+        bDef.position.set(100, 500);
+        bDef.fixedRotation = true;
 
-        figureBodyDef.position.set(100, 500);
-        figureBodyDef.fixedRotation = true;
+        b2dFigureBody = b2dWorld.createBody(bDef);
 
-        b2dFigureBody = b2dWorld.createBody(figureBodyDef);
-
-        FixtureDef figureFixtureDef = new FixtureDef();
-        figureFixtureDef.shape = b2dFigureShape;
-        figureFixtureDef.density = 1.f;
-        figureFixtureDef.restitution = 0.f;
-        figureFixtureDef.friction = 0.4f;
-        figureFixtureDef.filter.maskBits = 2;
-        figureFixtureDef.filter.categoryBits = 1;
-        figureFixtureDef.filter.groupIndex = 1;
-        b2dFigureBody = b2dFigureBody.createFixture(figureFixtureDef).getBody();
-
+        FixtureDef fDef = new FixtureDef();
+        fDef.shape = b2dFigureShape;
+        fDef.density = 1.f;
+        fDef.restitution = 0.f;
+        fDef.friction = 0.4f;
+        fDef.filter.groupIndex = 1;
+        b2dFigureBody = b2dFigureBody.createFixture(fDef).getBody();
+        b2dFigureBody.setUserData(GameStage.ID_PLAYER);
         b2dFigureShape.dispose();
     }
 }

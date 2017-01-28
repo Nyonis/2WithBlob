@@ -8,21 +8,20 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import java.util.ArrayList;
 
 /**
  * Created by me on 28.01.17.
  */
 public abstract class GameStage extends Stage {
 
+    public static final Integer ID_CAN_COLIDE = 1;
+    public static final Integer ID_PLAYER = 2;
     public float w, h;
     public OrthographicCamera camera;
 
@@ -35,6 +34,7 @@ public abstract class GameStage extends Stage {
     private int layerCount;
     private int[] preLayers;
     private TiledMapTileLayer foreGroundLayer;
+    private ArrayList<Item> toDestroy = new ArrayList<Item>();
 
 
     public GameStage(NatureBlobGame natureBlobGame, String mapName) {
@@ -59,14 +59,14 @@ public abstract class GameStage extends Stage {
 
         // have playerBlob by default
         PolygonShape shapeBlob = new PolygonShape();
-        shapeBlob.setAsBox(64,40);
+        shapeBlob.setAsBox(64, 40);
         playerBlob = new PlayerBlob(natureBlobGame.blobAtlas, shapeBlob, b2dWorld);
         this.addActor(playerBlob);
         // no visual player!!
         // TODO playerNature = new PlayerNature();
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(128,20);
+        shape.setAsBox(128, 20);
         playerNature = new PlayerNature(shape, b2dWorld);
         this.addActor(playerNature);
 
@@ -147,6 +147,13 @@ public abstract class GameStage extends Stage {
     public void draw() {
         // render tiles first
 
+        if (toDestroy.size() > 0) {
+            for (Item e : toDestroy) {
+                e.consume();
+            }
+            toDestroy.clear();
+        }
+
         playerBlob.setPosition(playerBlob.b2dFigureBody.getPosition().x, playerBlob.b2dFigureBody.getPosition().y);
         playerNature.setPosition(playerNature.hitbox.getPosition().x, playerNature.hitbox.getPosition().y);
 
@@ -163,6 +170,40 @@ public abstract class GameStage extends Stage {
         renderer.renderTileLayer(foreGroundLayer);
 
         doPhysicsStep();
+        b2dWorld.setContactListener(new ContactListener() {
+
+            @Override
+            public void beginContact(Contact contact) {
+                Object a = contact.getFixtureA().getBody().getUserData();
+                Object b = contact.getFixtureB().getBody().getUserData();
+                if (a != null && b != null) {
+
+                    System.out.println("Contact detected");
+                    if (a.equals(ID_PLAYER) && b instanceof Item) {
+                        toDestroy.add(((Item) b));
+                    } else if (a instanceof Item && b.equals(ID_PLAYER)) {
+                        toDestroy.add(((Item) a));
+                    }
+                }
+
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+                System.out.println("Contact removed");
+            }
+
+            @Override
+            public void postSolve(Contact arg0, ContactImpulse arg1) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void preSolve(Contact arg0, Manifold arg1) {
+                // TODO Auto-generated method stub
+            }
+        });
+
     }
 
     public void resize(int width, int height) {
