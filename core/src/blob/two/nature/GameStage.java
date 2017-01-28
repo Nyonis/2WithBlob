@@ -30,8 +30,10 @@ public abstract class GameStage extends Stage {
         // init camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false, w, h);
+        camera.zoom = 2f;
         camera.update();
-        setViewport(new FitViewport(20*w, 20*h, camera));
+        setViewport(new FitViewport(w, h, camera));
+
 
         // always render a tile map
         loadMap(mapName);

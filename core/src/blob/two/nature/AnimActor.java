@@ -20,7 +20,7 @@ public class AnimActor extends Actor {
 
     public AnimActor() {
         this.animTime = 0;
-        currentFrame = new TextureRegion(new Texture("Blob001.png"));
+        currentFrame = new TextureRegion(new Texture("Blob002.png"));
     }
 
     @Override

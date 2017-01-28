@@ -8,7 +8,7 @@ import com.badlogic.gdx.Input;
  */
 public class DemoStage extends GameStage {
 
-    public static int TILE_SIZE = 1024;
+    public static int TILE_SIZE = 128;
     private float move = 1f;
 
     public MyInput input;
@@ -41,6 +41,12 @@ public class DemoStage extends GameStage {
             }
         };
 
+        input.addHandler(Input.Keys.ESCAPE, new MyInput.KeyPressHandler() {
+            @Override
+            public void press(boolean isDown) {
+                Gdx.app.exit();
+            }
+        });
         Gdx.input.setInputProcessor(input);
 
     }
