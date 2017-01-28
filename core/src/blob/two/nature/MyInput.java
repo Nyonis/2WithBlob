@@ -15,7 +15,7 @@ public class MyInput implements InputProcessor {
     private long lefDownAt, rightDownAt;
 
     public static interface KeyPressHandler {
-        public void press(boolean isDown);
+        public void press(boolean isDown, int key);
     }
 
     public void addHandler(int keycode, KeyPressHandler handler) {
@@ -27,7 +27,7 @@ public class MyInput implements InputProcessor {
         pressed.put(keycode, true);
         KeyPressHandler h = handlers.get(keycode);
         if (h != null) {
-            h.press(true);
+            h.press(true, keycode);
         }
         return false;
     }
@@ -37,7 +37,7 @@ public class MyInput implements InputProcessor {
         pressed.put(keycode, false);
         KeyPressHandler h = handlers.get(keycode);
         if (h != null) {
-            h.press(false);
+            h.press(false, keycode);
         }
 
         return false;

@@ -62,7 +62,7 @@ public class DemoStage extends GameStage {
 
         input.addHandler(Input.Keys.ESCAPE, new MyInput.KeyPressHandler() {
             @Override
-            public void press(boolean isDown) {
+            public void press(boolean isDown, int key) {
                 Gdx.app.exit();
             }
         });

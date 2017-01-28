@@ -59,6 +59,4 @@ public class PlayerBlob extends Group{
     	
     	b2dFigureShape.dispose();
     }
-
-
 }

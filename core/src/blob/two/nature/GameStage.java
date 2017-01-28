@@ -65,7 +65,7 @@ public abstract class GameStage extends Stage {
         this.addActor(playerBlob);
 
         // no visual player!!
-        playerNature = new PlayerNature();
+        // TODO playerNature = new PlayerNature();
 
         create();
     }
