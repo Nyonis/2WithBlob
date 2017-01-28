@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
@@ -30,7 +31,8 @@ public class NatureBlobGame extends ApplicationAdapter {
     public void create() {
         super.create();
         initOpenGL();
-
+        Box2D.init();
+        
         stage = new DemoStage();
     }
 
