@@ -9,9 +9,11 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -49,22 +51,23 @@ public abstract class GameStage extends Stage {
 
         //Init physics with -10 units gravity in the y-axis
         //MUST be called before loadMap()
-        initPhysics(new Vector2(0.0f, -10.0f));
+        initPhysics(new Vector2(0.0f, -50.0f));
 
 
         b2dDebugRenderer = new Box2DDebugRenderer();
 
 
         // have playerBlob by default
-        CircleShape circle = new CircleShape();
-        circle.setRadius(6f);
-        playerBlob = new PlayerBlob(natureBlobGame.blobAtlas, circle, b2dWorld);
+        PolygonShape shapeBlob = new PolygonShape();
+        shapeBlob.setAsBox(64,40);
+        playerBlob = new PlayerBlob(natureBlobGame.blobAtlas, shapeBlob, b2dWorld);
         this.addActor(playerBlob);
         // no visual player!!
         // TODO playerNature = new PlayerNature();
-        CircleShape circle2 = new CircleShape();
-        circle2.setRadius(100);
-        playerNature = new PlayerNature(circle2, b2dWorld);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(128,20);
+        playerNature = new PlayerNature(shape, b2dWorld);
         this.addActor(playerNature);
 
         loadMap(mapName);

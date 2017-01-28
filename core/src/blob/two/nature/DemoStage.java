@@ -68,6 +68,11 @@ public class DemoStage extends GameStage {
                 Gdx.app.exit();
             }
         });
+        input.addHandler(Input.Keys.A, playerNature);
+        input.addHandler(Input.Keys.D, playerNature);
+        input.addHandler(Input.Keys.S, playerNature);
+        input.addHandler(Input.Keys.W, playerNature);
+
         Gdx.input.setInputProcessor(input);
 
     }

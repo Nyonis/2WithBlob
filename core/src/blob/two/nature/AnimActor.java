@@ -22,7 +22,6 @@ public class AnimActor extends Actor {
     public AnimActor(Texture tex) {
         currentFrame = new TextureRegion(tex);
         this.setPosition(currentFrame.getRegionWidth()/-2, currentFrame.getRegionHeight()/-2);
-        System.out.println(this.getX() + " " + this.getY());
     }
 
 
@@ -43,8 +42,6 @@ public class AnimActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        System.out.println(this.getX() + " " + this.getY());
-
         batch.draw(currentFrame, this.getX(), this.getY());
     }
 }

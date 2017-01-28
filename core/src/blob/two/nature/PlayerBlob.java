@@ -45,7 +45,7 @@ public class PlayerBlob extends Group {
         figureBodyDef.type = BodyType.DynamicBody;
 
         figureBodyDef.position.set(100, 500);
-
+        figureBodyDef.fixedRotation = true;
         b2dFigureBody = b2dWorld.createBody(figureBodyDef);
 
         FixtureDef figureFixtureDef = new FixtureDef();
