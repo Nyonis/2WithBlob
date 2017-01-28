@@ -27,7 +27,7 @@ public abstract class GameStage extends Stage {
     public TiledMap map;
     public PlayerBlob playerBlob;
     public PlayerNature playerNature;
-    private World b2dWorld;
+    public World b2dWorld;
     private Box2DDebugRenderer b2dDebugRenderer;
 
 
@@ -71,26 +71,6 @@ public abstract class GameStage extends Stage {
     
     private void initPhysics(Vector2 gravity) {
     	b2dWorld = new World(gravity, true);
-    	
-    	//TODO Durch die echten Böden ersetzen
-    	
-    	// Create our body definition
-    	BodyDef groundBodyDef = new BodyDef();  
-    	// Set its world position
-    	groundBodyDef.position.set(new Vector2(0, 10));  
-
-    	// Create a body from the defintion and add it to the world
-    	Body groundBody = b2dWorld.createBody(groundBodyDef);  
-
-    	// Create a polygon shape
-    	PolygonShape groundBox = new PolygonShape();  
-    	// Set the polygon shape as a box which is twice the size of our view port and 20 high
-    	// (setAsBox takes half-width and half-height as arguments)
-    	groundBox.setAsBox(camera.viewportWidth, 10.0f);
-    	// Create a fixture from our polygon shape and add it to our ground body  
-    	groundBody.createFixture(groundBox, 0.0f); 
-    	// Clean up after ourselves
-    	groundBox.dispose();
     }
 
 

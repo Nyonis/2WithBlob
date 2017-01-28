@@ -3,6 +3,7 @@ package blob.two.nature;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 
 import helper.MapConvertHelper;
@@ -18,8 +19,8 @@ public class DemoStage extends GameStage {
     public MyInput input;
 
     public DemoStage() {
-        super("TestWorld.tmx");
-        MapConvertHelper.mapToCollisionBdy(map, TILE_SIZE, new World(new Vector2 (0f, 0f), true));
+        super("TestWorld2.tmx");
+        MapConvertHelper.mapToCollisionBdy(map, TILE_SIZE, b2dWorld);
 
         input = new MyInput() {
             @Override
@@ -50,7 +51,9 @@ public class DemoStage extends GameStage {
             	// TODO Auto-generated method stub
             	Vector2 vel = playerBlob.b2dFigureBody.getLinearVelocity();
             	Vector2 pos = playerBlob.b2dFigureBody.getPosition();
-            	Vector2 impulse = new Vector2(screenX, h - screenY).sub(pos).scl(100000);
+            	Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
+            	
+            	Vector2 impulse = new Vector2(v.x, v.y).sub(pos).scl(100000);
             	
             	playerBlob.b2dFigureBody.applyLinearImpulse(impulse, pos, true);
             	System.out.println(vel + ":" + pos + ":" + new Vector2(screenX, h - screenY) + ":" + impulse);
