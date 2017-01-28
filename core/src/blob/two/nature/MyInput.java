@@ -12,6 +12,7 @@ public class MyInput implements InputProcessor {
 
     public HashMap<Integer, Boolean> pressed = new HashMap<Integer, Boolean>();
     public HashMap<Integer, KeyPressHandler> handlers = new HashMap<Integer, KeyPressHandler>();
+    private long lefDownAt, rightDownAt;
 
     public static interface KeyPressHandler {
         public void press(boolean isDown);
@@ -49,7 +50,27 @@ public class MyInput implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        // no mulit pointer support
+        if (pointer != 0)
+            return false;
+
+        if (button == Input.Buttons.LEFT) {
+            lefDownAt = System.currentTimeMillis();
+            onLeftDown(screenX, screenY);
+        } else if (button == Input.Buttons.RIGHT) {
+            rightDownAt = System.currentTimeMillis();
+            onRightDown(screenX, screenY);
+        }
+
         return false;
+    }
+
+    private void onRightDown(int screenX, int screenY) {
+        System.out.println("right down");
+    }
+
+    private void onLeftDown(int screenX, int screenY) {
+        System.out.println("left down");
     }
 
     @Override
@@ -60,10 +81,9 @@ public class MyInput implements InputProcessor {
             return false;
 
         if (button == Input.Buttons.LEFT) {
-
-            onLeftClick();
+            onLeftClick(screenX, screenY, System.currentTimeMillis() - lefDownAt);
         } else if (button == Input.Buttons.RIGHT) {
-            onRightClick();
+            onRightClick(screenX, screenY, System.currentTimeMillis() - rightDownAt);
         }
 
 
@@ -75,11 +95,11 @@ public class MyInput implements InputProcessor {
         return p != null ? p : false;
     }
 
-    public void onRightClick() {
+    public void onRightClick(int screenX, int screenY, long duration) {
         System.out.println("Right click");
     }
 
-    public void onLeftClick() {
+    public void onLeftClick(int screenX, int screenY, long duration) {
         System.out.println("Left click");
     }
 
@@ -97,6 +117,4 @@ public class MyInput implements InputProcessor {
     public boolean scrolled(int amount) {
         return false;
     }
-
-
 }
