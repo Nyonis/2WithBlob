@@ -146,13 +146,17 @@ public abstract class GameStage extends Stage {
     @Override
     public void draw() {
         // render tiles first
+
+        playerBlob.setPosition(playerBlob.b2dFigureBody.getPosition().x, playerBlob.b2dFigureBody.getPosition().y);
+        playerNature.setPosition(playerNature.hitbox.getPosition().x, playerNature.hitbox.getPosition().y);
+
+        camera.position.set(playerBlob.getX(), playerBlob.getY(), 0);
+
         camera.update();
         renderer.setView(camera);
         renderer.render(preLayers);
         b2dDebugRenderer.render(b2dWorld, camera.combined);
 
-        playerBlob.setPosition(playerBlob.b2dFigureBody.getPosition().x, playerBlob.b2dFigureBody.getPosition().y);
-        playerNature.setPosition(playerNature.hitbox.getPosition().x, playerNature.hitbox.getPosition().y);
         // make the scene draw stuff
         super.draw();
 

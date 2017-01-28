@@ -42,6 +42,7 @@ public class AnimActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        batch.setColor(this.getColor());
         batch.draw(currentFrame, this.getX(), this.getY());
     }
 }

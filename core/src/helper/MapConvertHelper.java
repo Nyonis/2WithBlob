@@ -12,14 +12,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 public class MapConvertHelper {
@@ -57,7 +51,11 @@ public class MapConvertHelper {
             BodyDef bd = new BodyDef();
             bd.type = BodyType.StaticBody;
             Body body = world.createBody(bd);
-            body.createFixture(shape, 1);
+            FixtureDef fDef = new FixtureDef();
+            fDef.shape = shape;
+            fDef.filter.groupIndex = 1;
+            fDef.density = 1;
+            body.createFixture(fDef);
 
             bodies.add(body);
 

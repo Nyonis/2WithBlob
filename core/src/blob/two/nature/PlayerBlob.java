@@ -46,6 +46,7 @@ public class PlayerBlob extends Group {
 
         figureBodyDef.position.set(100, 500);
         figureBodyDef.fixedRotation = true;
+
         b2dFigureBody = b2dWorld.createBody(figureBodyDef);
 
         FixtureDef figureFixtureDef = new FixtureDef();
@@ -53,8 +54,10 @@ public class PlayerBlob extends Group {
         figureFixtureDef.density = 1.f;
         figureFixtureDef.restitution = 0.f;
         figureFixtureDef.friction = 0.4f;
-
-        b2dFigureBody.createFixture(figureFixtureDef);
+        figureFixtureDef.filter.maskBits = 2;
+        figureFixtureDef.filter.categoryBits = 1;
+        figureFixtureDef.filter.groupIndex = 1;
+        b2dFigureBody = b2dFigureBody.createFixture(figureFixtureDef).getBody();
 
         b2dFigureShape.dispose();
     }
