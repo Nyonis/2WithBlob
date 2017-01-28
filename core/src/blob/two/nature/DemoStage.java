@@ -3,13 +3,9 @@ package blob.two.nature;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.physics.box2d.World;
-
 import helper.MapConvertHelper;
 
 /**
@@ -22,17 +18,18 @@ public class DemoStage extends GameStage {
 
     public MyInput input;
 
-    public void makeEatMes(){
+    public void makeEatMes() {
         PolygonShape s = new PolygonShape();
-        s.setAsBox(40,40);
+        s.setAsBox(40, 40);
         Item a = new Item(b2dWorld, s, new Texture("kugel.png"));
-        a.setPos(300,500);
+        a.setPos(300, 500);
         addActor(a);
     }
 
     public DemoStage(NatureBlobGame game) {
         super(game, "TestWorld2.tmx");
-        MapConvertHelper.mapToCollisionBdy(map, TILE_SIZE, b2dWorld);
+        MapConvertHelper.mapToCollisionBdy(map, "WallObjects", TILE_SIZE, b2dWorld, null);
+        MapConvertHelper.mapToCollisionBdy(map, "SpikeObjects", TILE_SIZE, b2dWorld, GameStage.ID_DIE);
 
 
         input = new MyInput() {
@@ -58,18 +55,18 @@ public class DemoStage extends GameStage {
 
                 return false;
             }
-            
+
             @Override
             public void onLeftClick(int screenX, int screenY, long duration) {
-            	// TODO Auto-generated method stub
-            	Vector2 vel = playerBlob.b2dFigureBody.getLinearVelocity();
-            	Vector2 pos = playerBlob.b2dFigureBody.getPosition();
-            	Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
-            	
-            	Vector2 impulse = new Vector2(v.x, v.y).sub(pos).scl(100000);
-            	
-            	playerBlob.b2dFigureBody.applyLinearImpulse(impulse, pos, true);
-            	System.out.println(vel + ":" + pos + ":" + new Vector2(screenX, h - screenY) + ":" + impulse);
+                // TODO Auto-generated method stub
+                Vector2 vel = playerBlob.b2dFigureBody.getLinearVelocity();
+                Vector2 pos = playerBlob.b2dFigureBody.getPosition();
+                Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
+
+                Vector2 impulse = new Vector2(v.x, v.y).sub(pos).scl(100000);
+
+                playerBlob.b2dFigureBody.applyLinearImpulse(impulse, pos, true);
+                System.out.println(vel + ":" + pos + ":" + new Vector2(screenX, h - screenY) + ":" + impulse);
             }
         };
 

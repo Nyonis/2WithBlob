@@ -21,10 +21,9 @@ public class MapConvertHelper {
     // The pixels per tile. If your tiles are 16x16, this is set to 16f
     private static float ppt = 0;
 
-    public static Array<Body> mapToCollisionBdy(Map map, float tileSize, World world) {
+    public static Array<Body> mapToCollisionBdy(Map map, String layerName, float tileSize, World world, Object uData) {
         ppt = tileSize;
-        MapObjects objects = map.getLayers().get("WallObjects").getObjects();
-        
+        MapObjects objects = map.getLayers().get(layerName).getObjects();
 
         Array<Body> bodies = new Array<Body>();
 
@@ -56,6 +55,9 @@ public class MapConvertHelper {
             fDef.filter.groupIndex = 1;
             fDef.density = 1;
             body.createFixture(fDef);
+
+            if(uData != null)
+                body.setUserData(uData);
 
             bodies.add(body);
 

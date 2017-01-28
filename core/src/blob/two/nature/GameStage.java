@@ -20,8 +20,8 @@ import java.util.ArrayList;
  */
 public abstract class GameStage extends Stage {
 
-    public static final Integer ID_CAN_COLIDE = 1;
     public static final Integer ID_PLAYER = 2;
+    public static final Integer ID_DIE = 2;
     public float w, h;
     public OrthographicCamera camera;
 
@@ -45,7 +45,7 @@ public abstract class GameStage extends Stage {
         // init camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false, w, h);
-        camera.zoom = 2f;
+        //camera.zoom = 2f;
         camera.update();
         setViewport(new FitViewport(w, h, camera));
 
@@ -93,8 +93,8 @@ public abstract class GameStage extends Stage {
             System.out.println(layer.getName());
         }
         // trigger, foreground, wallobjects
-        preLayers = new int[layerCount - 3];
-        for (int i = 0; i < layerCount - 3; i++) {
+        preLayers = new int[layerCount - 4];
+        for (int i = 0; i < layerCount - 4; i++) {
             preLayers[i] = i;
         }
         foreGroundLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
@@ -179,14 +179,15 @@ public abstract class GameStage extends Stage {
                 if (a != null && b != null) {
 
                     System.out.println("Contact detected");
-                    if (a.equals(ID_PLAYER) && b instanceof Item) {
-                        toDestroy.add(((Item) b));
-                    } else if (a instanceof Item && b.equals(ID_PLAYER)) {
+                    if (isItem(a, b))
                         toDestroy.add(((Item) a));
-                    }
+                    else if (isItem(b, a))
+                        toDestroy.add(((Item) b));
+                    else if (isDie(a, b))
+                        die();
                 }
-
             }
+
 
             @Override
             public void endContact(Contact contact) {
@@ -203,6 +204,19 @@ public abstract class GameStage extends Stage {
                 // TODO Auto-generated method stub
             }
         });
+    }
+
+    private void die() {
+        Gdx.app.exit();
+    }
+
+
+    private boolean isDie(Object a, Object b) {
+        return (a.equals(ID_PLAYER) && b.equals(ID_DIE)) || (b.equals(ID_PLAYER) && a.equals(ID_DIE));
+    }
+
+    private boolean isItem(Object a, Object b) {
+        return  (b.equals(ID_PLAYER) && a instanceof Item);
 
     }
 
