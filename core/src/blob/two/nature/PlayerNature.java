@@ -13,7 +13,8 @@ import com.badlogic.gdx.utils.Timer;
  */
 public class PlayerNature extends Group implements KeyPressHandler {
 
-    private static final long WAIT = 3000;
+    private static final long ON_TIME = 2000;
+    private static final long WAIT_TIME = 3000 + ON_TIME;
     public static int SPEED = 1000;
     private final AnimActor actor;
     private final World world;
@@ -77,9 +78,11 @@ public class PlayerNature extends Group implements KeyPressHandler {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if (!spaceAble && System.currentTimeMillis() > start + WAIT) {
-            spaceAble = true;
+        if (System.currentTimeMillis() > start + ON_TIME) {
             setHittable(false);
+        }
+        if(System.currentTimeMillis() > start + WAIT_TIME){
+            spaceAble = true;
         }
     }
 
@@ -118,7 +121,6 @@ public class PlayerNature extends Group implements KeyPressHandler {
 
                 if (spaceAble) {
                     spaceAble = false;
-
                     start = System.currentTimeMillis();
                     setHittable(true);
                 }
