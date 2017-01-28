@@ -10,25 +10,34 @@ public class DemoStage extends GameStage {
 
 
     public DemoStage() {
-        super("desert.tmx");
+        super("TestWorld.tmx");
     }
 
     public void create() {
         Gdx.input.setInputProcessor(this);
 
-        playerBlob.setPosition(50,50);
+        playerBlob.setPosition(0, 3*1024);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        if (keycode == Input.Keys.LEFT)
-            camera.translate(-32, 0);
-        if (keycode == Input.Keys.RIGHT)
-            camera.translate(32, 0);
-        if (keycode == Input.Keys.UP)
-            camera.translate(0, -32);
-        if (keycode == Input.Keys.DOWN)
-            camera.translate(0, 32);
+    	int distance = 1024;
+        if (keycode == Input.Keys.LEFT) {
+        	playerBlob.setPosition(playerBlob.getX()-distance, playerBlob.getY());
+            camera.translate(-distance, 0);
+        }
+        if (keycode == Input.Keys.RIGHT) {
+        	playerBlob.setPosition(playerBlob.getX()+distance, playerBlob.getY());
+            camera.translate(distance, 0);
+        }
+        if (keycode == Input.Keys.UP) {
+        	playerBlob.setPosition(playerBlob.getX(), playerBlob.getY()+distance);
+            camera.translate(0, distance);
+        }
+        if (keycode == Input.Keys.DOWN) {
+        	playerBlob.setPosition(playerBlob.getX(), playerBlob.getY()-distance);
+            camera.translate(0, -distance);
+        }
         return false;
     }
 

@@ -32,7 +32,7 @@ public abstract class GameStage extends Stage implements InputProcessor {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, w, h);
         camera.update();
-        setViewport(new FitViewport(w, h, camera));
+        setViewport(new FitViewport(20*w, 20*h, camera));
 
         // always render a tile map
         loadMap(mapName);
