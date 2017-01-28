@@ -7,7 +7,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        //config.width = 800;
+        config.width = 1024;
+        config.height = 512;
         new LwjglApplication(new NatureBlobGame(), config);
     }
 }
