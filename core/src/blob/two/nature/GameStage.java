@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -28,6 +29,7 @@ public abstract class GameStage extends Stage implements InputProcessor {
     public PlayerBlob playerBlob;
     public PlayerNature playerNature;
     private World b2dWorld;
+    private Box2DDebugRenderer b2dDebugRenderer;
 
 
     public GameStage(String mapName) {
@@ -41,13 +43,18 @@ public abstract class GameStage extends Stage implements InputProcessor {
         camera.update();
         setViewport(new FitViewport(w, h, camera));
 
+        //Init physics with -10 units gravity in the y-axis
+        //MUST be called before loadMap()
+        initPhysics(new Vector2(0.0f, -10.0f));
+        
         // always render a tile map
         loadMap(mapName);
         renderer = new OrthogonalTiledMapRenderer(map);
         renderer.setView(camera);
         
-        //Init physics with -10 units gravity in the y-axis
-        initPhysics(new Vector2(0.0f, -10.0f));
+        b2dDebugRenderer = new Box2DDebugRenderer();
+        
+
 
         // have playerBlob by default
         CircleShape circle = new CircleShape();
@@ -112,6 +119,7 @@ public abstract class GameStage extends Stage implements InputProcessor {
         camera.update();
         renderer.setView(camera);
         renderer.render();
+        b2dDebugRenderer.render(b2dWorld, camera.combined);
 
         
         playerBlob.setPosition(playerBlob.b2dFigureBody.getPosition().x, playerBlob.b2dFigureBody.getPosition().y);
