@@ -2,6 +2,8 @@ package blob.two.nature;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -14,6 +16,7 @@ import helper.MapConvertHelper;
 public class DemoStage extends GameStage {
 
     public static int TILE_SIZE = 128;
+    private final Sound sound;
     private float move = 1f;
 
     public MyInput input;
@@ -58,7 +61,6 @@ public class DemoStage extends GameStage {
 
             @Override
             public void onLeftClick(int screenX, int screenY, long duration) {
-                // TODO Auto-generated method stub
                 Vector2 vel = playerBlob.b2dFigureBody.getLinearVelocity();
                 Vector2 pos = playerBlob.b2dFigureBody.getPosition();
                 Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
@@ -66,7 +68,6 @@ public class DemoStage extends GameStage {
                 Vector2 impulse = new Vector2(v.x, v.y).sub(pos).scl(100000);
 
                 playerBlob.b2dFigureBody.applyLinearImpulse(impulse, pos, true);
-                System.out.println(vel + ":" + pos + ":" + new Vector2(screenX, h - screenY) + ":" + impulse);
             }
         };
 
@@ -84,9 +85,12 @@ public class DemoStage extends GameStage {
 
         Gdx.input.setInputProcessor(input);
 
-
         makeEatMes();
 
+        final FileHandle soundFile = Gdx.files.internal("8bit_music_fadeout.mp3");
+        sound = Gdx.audio.newSound(soundFile);
+        sound.setLooping(0, true);
+        sound.play(0.3f);
     }
 
 
