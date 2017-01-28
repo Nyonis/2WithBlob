@@ -2,10 +2,14 @@ package blob.two.nature;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -16,6 +20,7 @@ import com.badlogic.gdx.math.Vector2;
 public class NatureBlobGame extends ApplicationAdapter {
 
     private GameStage stage;
+    public TextureAtlas blobAtlas;
 
 
     private void initOpenGL() {
@@ -30,8 +35,14 @@ public class NatureBlobGame extends ApplicationAdapter {
         super.create();
         initOpenGL();
         Box2D.init();
-        
-        stage = new DemoStage();
+
+        AssetManager manager = new AssetManager();
+        manager.setLoader(TextureAtlas.class, new TextureAtlasLoader(new InternalFileHandleResolver()));
+        manager.load("blob.pack", TextureAtlas.class);
+        manager.finishLoading();
+        blobAtlas = manager.get("blob.pack", TextureAtlas.class);
+
+        stage = new DemoStage(this);
     }
 
     @Override

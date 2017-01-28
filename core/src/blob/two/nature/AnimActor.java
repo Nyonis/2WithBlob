@@ -1,12 +1,12 @@
 package blob.two.nature;
 
 import com.badlogic.gdx.Gdx;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by me on 28.01.17.
@@ -23,10 +23,17 @@ public class AnimActor extends Actor {
         currentFrame = new TextureRegion(new Texture("Blob002.png"));
     }
 
+    public AnimActor(Array<? extends TextureRegion> regions) {
+        this.currentFrame = regions.get(0);
+        this.anim = new Animation(.2f, regions, Animation.PlayMode.LOOP);
+    }
+
     @Override
     public void act(float delta) {
         animTime += Gdx.graphics.getDeltaTime();
-        //currentFrame = anim.getKeyFrame(animTime);
+        if (anim != null) {
+            currentFrame = anim.getKeyFrame(animTime);
+        }
     }
 
     @Override
