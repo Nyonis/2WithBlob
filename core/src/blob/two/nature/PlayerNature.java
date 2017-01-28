@@ -137,7 +137,7 @@ public class PlayerNature extends Group implements KeyPressHandler {
             actor.setColor(1, 1, 1, 1);
         } else {
             fi.groupIndex = 2;
-            actor.setColor(0.2f, 0.2f, 0.2f, .2f);
+            actor.setColor(1f, 1f, 1f, .2f);
         }
         f.setFilterData(fi);
 
