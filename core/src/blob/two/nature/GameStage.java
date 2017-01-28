@@ -51,13 +51,15 @@ public abstract class GameStage extends Stage {
 
         //Init physics with -10 units gravity in the y-axis
         //MUST be called before loadMap()
-        initPhysics(new Vector2(0.0f, -50.0f));
-
-
+        initPhysics(new Vector2(0.0f, -100.0f));
+        
+        // always render a tile map
+        renderer = new OrthogonalTiledMapRenderer(map);
+        renderer.setView(camera);
+        
         b2dDebugRenderer = new Box2DDebugRenderer();
 
 
-        // have playerBlob by default
         PolygonShape shapeBlob = new PolygonShape();
         shapeBlob.setAsBox(64, 40);
         playerBlob = new PlayerBlob(natureBlobGame.blobAtlas, shapeBlob, b2dWorld);
@@ -115,6 +117,7 @@ public abstract class GameStage extends Stage {
                     if (key.equals("Blob")) {
                         // set postion via physic!!
                         playerBlob.b2dFigureBody.setTransform(x, y, 0);
+                        playerBlob.b2dArmProjectile.setTransform(x,y,0);
 
                     } else if (key.equals("Cloud")) {
                         playerNature.hitbox.setTransform(x, y, 0);
@@ -138,8 +141,10 @@ public abstract class GameStage extends Stage {
     public abstract void create();
 
     public void doPhysicsStep() {
-        //TODO Dynamisch an die Framerate anpassen
-        b2dWorld.step(1 / 60f, 6, 2);
+
+    	//TODO Dynamisch an die Framerate anpassen
+    	playerBlob.doPhysics();
+    	b2dWorld.step(1/60f, 6, 2);
     }
 
     @Override
