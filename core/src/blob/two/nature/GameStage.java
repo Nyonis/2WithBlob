@@ -116,7 +116,6 @@ public abstract class GameStage extends Stage {
                         // set postion via physic!!
                         playerBlob.b2dFigureBody.setTransform(x, y, 0);
 
-
                     } else if (key.equals("Cloud")) {
                         playerNature.hitbox.setTransform(x, y, 0);
                     } else {
