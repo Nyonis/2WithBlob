@@ -2,6 +2,7 @@ package blob.two.nature;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
@@ -18,9 +19,10 @@ public class DemoStage extends GameStage {
 
     public MyInput input;
 
-    public DemoStage() {
-        super("TestWorld2.tmx");
+    public DemoStage(NatureBlobGame game) {
+        super(game, "TestWorld2.tmx");
         MapConvertHelper.mapToCollisionBdy(map, TILE_SIZE, b2dWorld);
+
 
         input = new MyInput() {
             @Override
@@ -85,6 +87,5 @@ public class DemoStage extends GameStage {
 
     public void create() {
         Gdx.input.setInputProcessor(input);
-        playerBlob.setPosition(0, 3 * TILE_SIZE);
     }
 }

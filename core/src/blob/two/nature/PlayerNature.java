@@ -1,6 +1,7 @@
 package blob.two.nature;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -20,7 +21,8 @@ import blob.two.nature.MyInput.KeyPressHandler;
 public class PlayerNature extends Group implements KeyPressHandler {
 
 	public static int SPEED = 10;
-	
+	private final AnimActor actor;
+
 	//public AnimActor cloud;
 	public Body hitbox;
 	FixtureDef fDef;
@@ -29,8 +31,8 @@ public class PlayerNature extends Group implements KeyPressHandler {
 
 	public PlayerNature(Shape shape, World world) {
 		
-		/*cloud = new AnimActor();
-		this.addActor(cloud);*/
+		actor = new AnimActor(new Texture("cloud001_128x256.png"));
+		this.addActor(actor);
 
 		BodyDef bDef = new BodyDef();
 		bDef.type = BodyType.KinematicBody;

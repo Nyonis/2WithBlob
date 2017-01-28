@@ -3,10 +3,12 @@ package blob.two.nature;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -33,7 +35,7 @@ public abstract class GameStage extends Stage {
     private TiledMapTileLayer foreGroundLayer;
 
 
-    public GameStage(String mapName) {
+    public GameStage(NatureBlobGame natureBlobGame, String mapName) {
 
         w = Gdx.graphics.getWidth();
         h = Gdx.graphics.getHeight();
@@ -45,15 +47,10 @@ public abstract class GameStage extends Stage {
         camera.update();
         setViewport(new FitViewport(w, h, camera));
 
-
         //Init physics with -10 units gravity in the y-axis
         //MUST be called before loadMap()
         initPhysics(new Vector2(0.0f, -10.0f));
 
-        // always render a tile map
-        loadMap(mapName);
-        renderer = new OrthogonalTiledMapRenderer(map);
-        renderer.setView(camera);
 
         b2dDebugRenderer = new Box2DDebugRenderer();
 
@@ -61,11 +58,20 @@ public abstract class GameStage extends Stage {
         // have playerBlob by default
         CircleShape circle = new CircleShape();
         circle.setRadius(6f);
-        playerBlob = new PlayerBlob(circle, b2dWorld);
+        playerBlob = new PlayerBlob(natureBlobGame.blobAtlas, circle, b2dWorld);
         this.addActor(playerBlob);
-
         // no visual player!!
         // TODO playerNature = new PlayerNature();
+        CircleShape circle2 = new CircleShape();
+        circle2.setRadius(100);
+        playerNature = new PlayerNature(circle2, b2dWorld);
+        this.addActor(playerNature);
+
+        loadMap(mapName);
+
+        // always render a tile map
+        renderer = new OrthogonalTiledMapRenderer(map);
+        renderer.setView(camera);
 
         create();
     }
@@ -78,11 +84,44 @@ public abstract class GameStage extends Stage {
     private void loadMap(String name) {
         map = new TmxMapLoader().load(name);
         layerCount = map.getLayers().getCount();
-        preLayers = new int[layerCount - 2];
-        for (int i = 0; i < layerCount - 2; i++) {
+
+        System.out.println("map layers:");
+        for (MapLayer layer : map.getLayers()) {
+            System.out.println(layer.getName());
+        }
+        // trigger, foreground, wallobjects
+        preLayers = new int[layerCount - 3];
+        for (int i = 0; i < layerCount - 3; i++) {
             preLayers[i] = i;
         }
         foreGroundLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
+        TiledMapTileLayer trigersLayer = (TiledMapTileLayer) map.getLayers().get("Triggers");
+
+        for (int i = 0; i < trigersLayer.getHeight(); i++) {
+            for (int j = 0; j < trigersLayer.getWidth(); j++) {
+                TiledMapTileLayer.Cell c = trigersLayer.getCell(j, i);
+                if (c != null) {
+                    MapProperties ps = c.getTile().getProperties();
+                    if (!ps.containsKey("Trigger"))
+                        continue;
+
+                    String key = ps.get("Trigger", String.class);
+                    float x = trigersLayer.getTileWidth() * j;
+                    float y = trigersLayer.getTileHeight() * i;
+
+                    if (key.equals("Blob")) {
+                        // set postion via physic!!
+                        playerBlob.b2dFigureBody.setTransform(x, y, 0);
+
+
+                    } else if (key.equals("Cloud")) {
+                        playerNature.hitbox.setTransform(x, y, 0);
+                    } else {
+                        System.out.printf("Unknown key: " + key);
+                    }
+                }
+            }
+        }
         //map.getProperties().get("bubber", String.class);
         //MapLayers layers = map.getLayers();
         //TiledMapTileLayer l = (TiledMapTileLayer) layers.get(0);
@@ -110,6 +149,7 @@ public abstract class GameStage extends Stage {
         b2dDebugRenderer.render(b2dWorld, camera.combined);
 
         playerBlob.setPosition(playerBlob.b2dFigureBody.getPosition().x, playerBlob.b2dFigureBody.getPosition().y);
+        playerNature.setPosition(playerNature.hitbox.getPosition().x, playerNature.hitbox.getPosition().y);
         // make the scene draw stuff
         super.draw();
 
