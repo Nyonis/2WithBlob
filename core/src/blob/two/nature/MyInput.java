@@ -61,9 +61,9 @@ public class MyInput implements InputProcessor {
 
         if (button == Input.Buttons.LEFT) {
 
-            onLeftClick();
+            onLeftClick(screenX, screenY);
         } else if (button == Input.Buttons.RIGHT) {
-            onRightClick();
+            onRightClick(screenX, screenY);
         }
 
 
@@ -75,11 +75,11 @@ public class MyInput implements InputProcessor {
         return p != null ? p : false;
     }
 
-    public void onRightClick() {
+    public void onRightClick(int screenX, int screenY) {
         System.out.println("Right click");
     }
 
-    public void onLeftClick() {
+    public void onLeftClick(int screenX, int screenY) {
         System.out.println("Left click");
     }
 

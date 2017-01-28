@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
  */
 public abstract class GameStage extends Stage {
 
-    private float w, h;
+    public float w, h;
     public OrthographicCamera camera;
 
     private OrthogonalTiledMapRenderer renderer;

@@ -2,6 +2,7 @@ package blob.two.nature;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by me on 28.01.17.
@@ -38,6 +39,17 @@ public class DemoStage extends GameStage {
                 camera.translate(dx, dy);
 
                 return false;
+            }
+            
+            @Override
+            public void onLeftClick(int screenX, int screenY) {
+            	// TODO Auto-generated method stub
+            	Vector2 vel = playerBlob.b2dFigureBody.getLinearVelocity();
+            	Vector2 pos = playerBlob.b2dFigureBody.getPosition();
+            	Vector2 impulse = new Vector2(screenX, h - screenY).scl(20).sub(pos).scl(100000);
+            	
+            	playerBlob.b2dFigureBody.applyLinearImpulse(impulse, pos, true);
+            	System.out.println(vel + ":" + pos + ":" + new Vector2(screenX, h - screenY) + ":" + impulse);
             }
         };
 
