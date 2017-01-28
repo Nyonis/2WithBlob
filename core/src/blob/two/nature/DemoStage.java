@@ -2,11 +2,6 @@ package blob.two.nature;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 /**
  * Created by me on 28.01.17.
@@ -20,6 +15,8 @@ public class DemoStage extends GameStage {
 
     public void create() {
         Gdx.input.setInputProcessor(this);
+
+        playerBlob.setPosition(50,50);
     }
 
     @Override

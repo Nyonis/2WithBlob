@@ -19,7 +19,8 @@ public abstract class GameStage extends Stage implements InputProcessor {
 
     private OrthogonalTiledMapRenderer renderer;
     public TiledMap map;
-    public Player player;
+    public PlayerBlob playerBlob;
+    public PlayerNature playerNature;
 
 
     public GameStage(String mapName) {
@@ -38,9 +39,12 @@ public abstract class GameStage extends Stage implements InputProcessor {
         renderer = new OrthogonalTiledMapRenderer(map);
         renderer.setView(camera);
 
-        // have player by default
-        player = new Player();
-        this.addActor(player);
+        // have playerBlob by default
+        playerBlob = new PlayerBlob();
+        this.addActor(playerBlob);
+
+        // no visual player!!
+        playerNature = new PlayerNature();
 
         create();
     }
@@ -56,6 +60,9 @@ public abstract class GameStage extends Stage implements InputProcessor {
 //        map.getTileSets().getTile(0).getProperties();
     }
 
+    /**
+     * Initial stuff for subclasses in here!
+     */
     public abstract void create();
 
     @Override

@@ -6,14 +6,18 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 /**
  * Created by me on 28.01.17.
  */
-public class Player extends Group{
+public class PlayerBlob extends Group{
 
     public AnimActor figure;
-    public Actor hand;
+    public AnimActor hand;
 
-    public Player() {
+    public PlayerBlob() {
         figure = new AnimActor();
+        hand = new AnimActor();
+
+        hand.setPosition(20,20);
         this.addActor(figure);
+        //this.addActor(hand);
     }
 
 
