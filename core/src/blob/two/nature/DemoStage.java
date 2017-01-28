@@ -2,6 +2,8 @@ package blob.two.nature;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -76,6 +78,10 @@ public class DemoStage extends GameStage {
 
         Gdx.input.setInputProcessor(input);
 
+        final FileHandle soundFile = Gdx.files.internal("8bit_music_fadeout.mp3");
+        Sound sound = Gdx.audio.newSound(soundFile);
+        sound.setLooping(0, true);
+    	sound.play(0.3f);
     }
 
 

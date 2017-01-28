@@ -156,6 +156,8 @@ public abstract class GameStage extends Stage {
         playerNature.hitbox.setTransform(
         		Math.min(playerNature.hitbox.getPosition().x, camera.position.x + this.getViewport().getScreenWidth()/2*camera.zoom),
         		Math.min(playerNature.hitbox.getPosition().y, camera.position.y + this.getViewport().getScreenHeight()/2*camera.zoom), 0f);
+        
+        playerNature.setPosition(playerNature.hitbox.getPosition().x, playerNature.hitbox.getPosition().y);
 
         camera.position.set(playerBlob.getX(), playerBlob.getY(), 0);
 
