@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 
 import helper.MapConvertHelper;
@@ -39,6 +40,10 @@ public class DemoStage extends GameStage {
                 if (keycode == Input.Keys.DOWN) {
                     dy = -TILE_SIZE;
                 }
+                if (keycode == Input.Keys.SPACE) {
+                	playerBlob.b2dArmProjectile.setType(BodyType.StaticBody);
+                	playerBlob.locked = true;
+                }
 
                 playerBlob.setPosition(playerBlob.getX() + dx, playerBlob.getY() + dy);
                 camera.translate(dx, dy);
@@ -47,17 +52,36 @@ public class DemoStage extends GameStage {
             }
             
             @Override
+            protected void onLeftDown(int screenX, int screenY) {
+            	// TODO Auto-generated method stub
+            	Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
+
+            	playerBlob.activateExtendArm(new Vector2(v.x, v.y));
+            }
+            
+            @Override
+            public void onLeftClick(int screenX, int screenY, long duration) {
+            	playerBlob.deactivateExtendArm();
+            }
+            
+            @Override
+            public void onLeftDragged(int screenX, int screenY) {
+            	Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
+            	
+            	playerBlob.updateArmTarget(new Vector2(v.x, v.y));
+            }
+            
+            /*@Override
             public void onLeftClick(int screenX, int screenY, long duration) {
             	// TODO Auto-generated method stub
-            	Vector2 vel = playerBlob.b2dFigureBody.getLinearVelocity();
             	Vector2 pos = playerBlob.b2dFigureBody.getPosition();
             	Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
             	
-            	Vector2 impulse = new Vector2(v.x, v.y).sub(pos).scl(100000);
+            	Vector2 impulse = new Vector2(v.x, v.y).sub(pos).scl(10000);
             	
             	playerBlob.b2dFigureBody.applyLinearImpulse(impulse, pos, true);
-            	System.out.println(vel + ":" + pos + ":" + new Vector2(screenX, h - screenY) + ":" + impulse);
-            }
+            	System.out.println(":" + pos + ":" + new Vector2(screenX, h - screenY) + ":" + impulse);
+            }*/
         };
 
         input.addHandler(Input.Keys.ESCAPE, new MyInput.KeyPressHandler() {

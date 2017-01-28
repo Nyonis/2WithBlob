@@ -46,7 +46,7 @@ public abstract class GameStage extends Stage {
 
         //Init physics with -10 units gravity in the y-axis
         //MUST be called before loadMap()
-        initPhysics(new Vector2(0.0f, -10.0f));
+        initPhysics(new Vector2(0.0f, -100.0f));
         
         // always render a tile map
         loadMap(mapName);
@@ -59,7 +59,7 @@ public abstract class GameStage extends Stage {
 
         // have playerBlob by default
         CircleShape circle = new CircleShape();
-        circle.setRadius(6f);
+        circle.setRadius(128f);
         playerBlob = new PlayerBlob(circle, b2dWorld);
         this.addActor(playerBlob);
 
@@ -91,6 +91,7 @@ public abstract class GameStage extends Stage {
     
     public void doPhysicsStep() {
     	//TODO Dynamisch an die Framerate anpassen
+    	playerBlob.doPhysics();
     	b2dWorld.step(1/60f, 6, 2);
     }
 
@@ -101,7 +102,6 @@ public abstract class GameStage extends Stage {
         renderer.setView(camera);
         renderer.render();
         b2dDebugRenderer.render(b2dWorld, camera.combined);
-
         
         playerBlob.setPosition(playerBlob.b2dFigureBody.getPosition().x, playerBlob.b2dFigureBody.getPosition().y);
         // make the scene draw stuff
