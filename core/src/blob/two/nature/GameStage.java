@@ -20,6 +20,7 @@ public abstract class GameStage extends Stage {
     public TiledMap map;
     public PlayerBlob playerBlob;
     public PlayerNature playerNature;
+    public MyInput input;
 
 
     public GameStage(String mapName) {
@@ -44,6 +45,9 @@ public abstract class GameStage extends Stage {
 
         // no visual player!!
         playerNature = new PlayerNature();
+
+        input = new MyInput();
+        Gdx.input.setInputProcessor(input);
 
         create();
     }
