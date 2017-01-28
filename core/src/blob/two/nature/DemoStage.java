@@ -3,19 +3,23 @@ package blob.two.nature;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
+
+import helper.MapConvertHelper;
 
 /**
  * Created by me on 28.01.17.
  */
 public class DemoStage extends GameStage {
 
-    public static int TILE_SIZE = 1024;
+    public static int TILE_SIZE = 128;
     private float move = 1f;
 
     public MyInput input;
 
     public DemoStage() {
         super("TestWorld.tmx");
+        MapConvertHelper.mapToCollisionBdy(map, TILE_SIZE, new World(new Vector2 (0f, 0f), true));
 
         input = new MyInput() {
             @Override
@@ -42,17 +46,23 @@ public class DemoStage extends GameStage {
             }
             
             @Override
-            public void onLeftClick(int screenX, int screenY) {
+            public void onLeftClick(int screenX, int screenY, long duration) {
             	// TODO Auto-generated method stub
             	Vector2 vel = playerBlob.b2dFigureBody.getLinearVelocity();
             	Vector2 pos = playerBlob.b2dFigureBody.getPosition();
-            	Vector2 impulse = new Vector2(screenX, h - screenY).scl(20).sub(pos).scl(100000);
+            	Vector2 impulse = new Vector2(screenX, h - screenY).sub(pos).scl(100000);
             	
             	playerBlob.b2dFigureBody.applyLinearImpulse(impulse, pos, true);
             	System.out.println(vel + ":" + pos + ":" + new Vector2(screenX, h - screenY) + ":" + impulse);
             }
         };
 
+        input.addHandler(Input.Keys.ESCAPE, new MyInput.KeyPressHandler() {
+            @Override
+            public void press(boolean isDown) {
+                Gdx.app.exit();
+            }
+        });
         Gdx.input.setInputProcessor(input);
 
     }

@@ -11,7 +11,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-
+import com.badlogic.gdx.math.Vector2;
 
 public class NatureBlobGame extends ApplicationAdapter {
 
