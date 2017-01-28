@@ -8,11 +8,13 @@ import com.badlogic.gdx.scenes.scene2d.Group;
  */
 public class Player extends Group{
 
-    public float x,y;
     public AnimActor figure;
     public Actor hand;
 
     public Player() {
-        //figure = new Actor();
+        figure = new AnimActor();
+        this.addActor(figure);
     }
+
+
 }

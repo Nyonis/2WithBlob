@@ -14,27 +14,23 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public class AnimActor extends Actor {
 
     private TextureRegion currentFrame;
-    private float stateTime;
+    private float animTime;
 
     public Animation anim;
 
-    public AnimActor(float stateTime) {
-        this.stateTime = stateTime;
+    public AnimActor() {
+        this.animTime = 0;
         currentFrame = new TextureRegion(new Texture("badlogic.jpg"));
     }
 
     @Override
     public void act(float delta) {
-        super.act(delta);
-        stateTime += Gdx.graphics.getDeltaTime();
-        currentFrame = anim.getKeyFrame(stateTime);
-
+        animTime += Gdx.graphics.getDeltaTime();
+        //currentFrame = anim.getKeyFrame(animTime);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-
         batch.draw(currentFrame, this.getX(), this.getY());
-
     }
 }
