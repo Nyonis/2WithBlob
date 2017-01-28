@@ -2,6 +2,10 @@ package blob.two.nature;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
+
+import helper.MapConvertHelper;
 
 /**
  * Created by me on 28.01.17.
@@ -15,6 +19,7 @@ public class DemoStage extends GameStage {
 
     public DemoStage() {
         super("TestWorld.tmx");
+        MapConvertHelper.mapToCollisionBdy(map, TILE_SIZE, new World(new Vector2 (0f, 0f), true));
 
         input = new MyInput() {
             @Override
