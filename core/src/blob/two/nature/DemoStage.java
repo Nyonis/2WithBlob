@@ -58,7 +58,7 @@ public class DemoStage extends GameStage {
             	Vector2 impulse = new Vector2(v.x, v.y).sub(pos).scl(100000);
             	
             	playerBlob.b2dFigureBody.applyLinearImpulse(impulse, pos, true);
-            	System.out.println(vel + ":" + pos + ":" + new Vector2(screenX, h - screenY) + ":" + impulse);
+            	//System.out.println(vel + ":" + pos + ":" + new Vector2(screenX, h - screenY) + ":" + impulse);
             }
         };
 

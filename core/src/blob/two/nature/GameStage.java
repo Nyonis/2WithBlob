@@ -88,10 +88,10 @@ public abstract class GameStage extends Stage {
         map = new TmxMapLoader().load(name);
         layerCount = map.getLayers().getCount();
 
-        System.out.println("map layers:");
+        /*System.out.println("map layers:");
         for (MapLayer layer : map.getLayers()) {
             System.out.println(layer.getName());
-        }
+        }*/
         // trigger, foreground, wallobjects
         preLayers = new int[layerCount - 3];
         for (int i = 0; i < layerCount - 3; i++) {
@@ -148,7 +148,14 @@ public abstract class GameStage extends Stage {
         // render tiles first
 
         playerBlob.setPosition(playerBlob.b2dFigureBody.getPosition().x, playerBlob.b2dFigureBody.getPosition().y);
-        playerNature.setPosition(playerNature.hitbox.getPosition().x, playerNature.hitbox.getPosition().y);
+ 
+        // move cloud if it gets out of screen
+        playerNature.hitbox.setTransform(
+        		Math.max(playerNature.hitbox.getPosition().x, camera.position.x - this.getViewport().getScreenWidth()/2*camera.zoom),
+        		Math.max(playerNature.hitbox.getPosition().y, camera.position.y - this.getViewport().getScreenHeight()/2*camera.zoom), 0f);
+        playerNature.hitbox.setTransform(
+        		Math.min(playerNature.hitbox.getPosition().x, camera.position.x + this.getViewport().getScreenWidth()/2*camera.zoom),
+        		Math.min(playerNature.hitbox.getPosition().y, camera.position.y + this.getViewport().getScreenHeight()/2*camera.zoom), 0f);
 
         camera.position.set(playerBlob.getX(), playerBlob.getY(), 0);
 

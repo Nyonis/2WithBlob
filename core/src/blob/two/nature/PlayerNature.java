@@ -113,22 +113,17 @@ public class PlayerNature extends Group implements KeyPressHandler {
 
     @Override
     public void press(boolean isDown, int key) {
-        System.out.println("key: " + isDown + " " + key);
-
-        switch (key) {
-
-            case Input.Keys.SPACE:
-
-                if (spaceAble) {
-                    spaceAble = false;
-                    start = System.currentTimeMillis();
-                    setHittable(true);
-                }
+        //System.out.println("key: " + isDown + " " + key);
+    	
+    	if (spaceAble && key == Input.Keys.SPACE) {
+	    	spaceAble = false;
+	    	start = System.currentTimeMillis();
+	    	setHittable(true);
         }
     }
 
     public void setHittable(boolean hittable) {
-        System.out.println(fDef.filter.groupIndex);
+        //System.out.println(fDef.filter.groupIndex);
         Fixture f = hitbox.getFixtureList().get(0);
         Filter fi = f.getFilterData();
 
@@ -140,6 +135,5 @@ public class PlayerNature extends Group implements KeyPressHandler {
             actor.setColor(0.2f, 0.2f, 0.2f, .2f);
         }
         f.setFilterData(fi);
-
     }
 }
