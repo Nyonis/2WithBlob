@@ -2,12 +2,15 @@ package blob.two.nature;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.Box2D;
+
+import blob.two.nature.MyInput.KeyPressHandler;
 
 public class NatureBlobGame extends ApplicationAdapter {
 
@@ -26,6 +29,17 @@ public class NatureBlobGame extends ApplicationAdapter {
         super.create();
         initOpenGL();
         Box2D.init();
+
+        Gdx.input.setInputProcessor(MyInput.getInstance());
+        KeyPressHandler closer = new KeyPressHandler() {
+            @Override
+            public void press(boolean isDown, int key) {
+            	if (key == Input.Keys.ESCAPE) {
+                    Gdx.app.exit();
+            	}
+            }
+        };
+        MyInput.getInstance().addKeyHandler(closer);
 
         AssetManager manager = new AssetManager();
         manager.setLoader(TextureAtlas.class, new TextureAtlasLoader(new InternalFileHandleResolver()));

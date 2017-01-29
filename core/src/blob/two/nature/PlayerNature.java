@@ -11,13 +11,12 @@ import com.badlogic.gdx.utils.Timer;
 /**
  * Created by me on 28.01.17.
  */
-public class PlayerNature extends Group implements KeyPressHandler {
+public class PlayerNature extends Group {
 
     private static final long ON_TIME = 2000;
     private static final long WAIT_TIME = 3000 + ON_TIME;
     public static int SPEED = 1000;
     private final AnimActor actor;
-    private final World world;
     private final BodyDef bDef;
 
     //public AnimActor cloud;
@@ -26,17 +25,7 @@ public class PlayerNature extends Group implements KeyPressHandler {
     boolean spaceAble = true;
     Timer timer;
     float sx = 0, sy = 0;
-
-    public KeyPressHandler left = new KeyPressHandler() {
-        @Override
-        public void press(boolean isDown, int key) {
-            sx = -SPEED;
-            if (!isDown) {
-                sx = 0;
-            }
-            hitbox.setLinearVelocity(sx, sy);
-        }
-    };
+	public KeyPressHandler mover;
 
     public KeyPressHandler right = new KeyPressHandler() {
         @Override
@@ -49,29 +38,6 @@ public class PlayerNature extends Group implements KeyPressHandler {
         }
     };
 
-
-    public KeyPressHandler down = new KeyPressHandler() {
-        @Override
-        public void press(boolean isDown, int key) {
-            sy = -SPEED;
-            if (!isDown) {
-                sy = 0;
-            }
-            hitbox.setLinearVelocity(sx, sy);
-        }
-    };
-
-
-    public KeyPressHandler up = new KeyPressHandler() {
-        @Override
-        public void press(boolean isDown, int key) {
-            sy = SPEED;
-            if (!isDown) {
-                sy = 0;
-            }
-            hitbox.setLinearVelocity(sx, sy);
-        }
-    };
 
     long start;
 
@@ -87,7 +53,50 @@ public class PlayerNature extends Group implements KeyPressHandler {
     }
 
     public PlayerNature(Shape shape, World world) {
-        this.world = world;
+    	mover = new KeyPressHandler() {
+            @Override
+            public void press(boolean isDown, int key) {
+            	if (key == Input.Keys.SPACE) {
+            		if (isDown && spaceAble) {
+                        spaceAble = false;
+                        start = System.currentTimeMillis();
+                        setHittable(true);
+                    }
+            		return;
+            	}
+            	if (isDown) {
+                	switch(key) {
+                	case Input.Keys.W:
+                		sy = SPEED;
+                		break;
+                	case Input.Keys.S:
+                		sy = -SPEED;
+                		break;
+                	case Input.Keys.A:
+                		sx = -SPEED;
+                		break;
+                	case Input.Keys.D:
+                		sx = SPEED;
+                		break;
+                	}
+            	} else {
+                	switch(key) {
+                	case Input.Keys.W:
+                	case Input.Keys.S:
+                		sy = 0;
+                		break;
+                	case Input.Keys.A:
+                	case Input.Keys.D:
+                		sx = 0;
+                		break;
+                	}
+            		
+            	}
+                hitbox.setLinearVelocity(sx, sy);
+            }
+        };
+        MyInput.getInstance().addKeyHandler(mover);
+
         actor = new AnimActor(new Texture("cloud001_128x256.png"));
         this.addActor(actor);
 
@@ -109,17 +118,6 @@ public class PlayerNature extends Group implements KeyPressHandler {
         hitbox.createFixture(fDef);
         setHittable(false);
         shape.dispose();
-    }
-
-    @Override
-    public void press(boolean isDown, int key) {
-        //System.out.println("key: " + isDown + " " + key);
-
-        if (spaceAble && key == Input.Keys.SPACE) {
-            spaceAble = false;
-            start = System.currentTimeMillis();
-            setHittable(true);
-        }
     }
 
     public void setHittable(boolean hittable) {

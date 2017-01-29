@@ -8,7 +8,6 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -18,11 +17,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class MapConvertHelper {
 
-    // The pixels per tile. If your tiles are 16x16, this is set to 16f
-    private static float ppt = 0;
-
-    public static Array<Body> mapToCollisionBdy(Map map, String layerName, float tileSize, World world, Object uData) {
-        ppt = tileSize;
+    public static Array<Body> mapToCollisionBody(Map map, String layerName, World world, Object uData) {
         MapObjects objects = map.getLayers().get(layerName).getObjects();
 
         Array<Body> bodies = new Array<Body>();
@@ -93,7 +88,6 @@ public class MapConvertHelper {
         float[] worldVertices = new float[vertices.length];
 
         for (int i = 0; i < vertices.length; ++i) {
-            System.out.println(vertices[i]);
             worldVertices[i] = vertices[i] ;
         }
 

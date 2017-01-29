@@ -2,7 +2,6 @@ package blob.two.nature;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -90,10 +89,6 @@ public abstract class GameStage extends Stage {
         map = new TmxMapLoader().load(name);
         layerCount = map.getLayers().getCount();
 
-        /*System.out.println("map layers:");
-        for (MapLayer layer : map.getLayers()) {
-            System.out.println(layer.getName());
-        }*/
         // trigger, foreground, wallobjects
         preLayers = new int[layerCount - 4];
         for (int i = 0; i < layerCount - 4; i++) {
@@ -122,7 +117,7 @@ public abstract class GameStage extends Stage {
                     } else if (key.equals("Cloud")) {
                         playerNature.hitbox.setTransform(x, y, 0);
                     } else {
-                        System.out.printf("Unknown key: " + key);
+                        System.out.println("Unknown key: " + key);
                     }
                 }
             }
@@ -190,8 +185,6 @@ public abstract class GameStage extends Stage {
                 Object a = contact.getFixtureA().getBody().getUserData();
                 Object b = contact.getFixtureB().getBody().getUserData();
                 if (a != null && b != null) {
-
-                    System.out.println("Contact detected");
                     if (isItem(a, b))
                         toDestroy.add(((Item) a));
                     else if (isItem(b, a))
@@ -202,10 +195,8 @@ public abstract class GameStage extends Stage {
             }
 
 
-            @Override
-            public void endContact(Contact contact) {
-                System.out.println("Contact removed");
-            }
+            @Override // TODO
+            public void endContact(Contact contact) {}
 
             @Override
             public void postSolve(Contact arg0, ContactImpulse arg1) {

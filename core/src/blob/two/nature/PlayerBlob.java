@@ -1,40 +1,24 @@
 package blob.two.nature;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
-import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
-import com.badlogic.gdx.physics.box2d.joints.PrismaticJoint;
-import com.badlogic.gdx.physics.box2d.joints.PrismaticJointDef;
-import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
-import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJoint;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
-import com.badlogic.gdx.physics.box2d.joints.WeldJoint;
-import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
-import com.badlogic.gdx.physics.box2d.joints.WheelJointDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
+
+import blob.two.nature.MyInput.KeyPressHandler;
+import blob.two.nature.MyInput.MouseHandler;
 
 /**
  * Created by me on 28.01.17.
@@ -72,6 +56,34 @@ public class PlayerBlob extends Group {
         //hand.setPosition(20, 20);
         this.addActor(figure);
         //this.addActor(hand);
+
+        KeyPressHandler keyHandler = new KeyPressHandler() {
+			@Override
+			public void press(boolean isDown, int key) {
+				if (key == Input.Keys.ENTER) {
+                	b2dArmProjectile.setType(BodyType.StaticBody);
+                	locked = true;
+				}
+			}
+        };
+        MouseHandler mouseHandler = new MouseHandler() {
+			@Override
+			public void mouseAction(int x, int y, boolean isDown, boolean isLeft, boolean isDrag) {
+				if (isLeft) {
+					if (isDown) {
+						// TODO Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
+						activateExtendArm(new Vector2(/*v.*/x, /*v.*/y));
+					} else if (isDrag) {
+						// TODO Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
+						updateArmTarget(new Vector2(/*v.*/x, /*v.*/y));
+					} else { // isUp
+						deactivateExtendArm();
+					}
+				}
+			}
+        };
+        MyInput.getInstance().addKeyHandler(keyHandler);
+        MyInput.getInstance().addMouseHandler(mouseHandler);
     }
 
     public PlayerBlob(Shape b2dFigureShape, World b2dWorld) {
