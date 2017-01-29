@@ -177,9 +177,7 @@ public class PlayerBlob extends Group {
     private void extendArm() {
     	Vector2 distance = b2dArmProjectile.getPosition().cpy().sub(armTarget);
     	if(!(distance.len() < 1.f)) {
-    		if(!locked) {
-    			b2dArmProjectile.setLinearVelocity(armTarget.cpy().sub(b2dArmProjectile.getPosition()).nor().scl(maxRopeLength / 4));
-    		}
+    		b2dArmProjectile.setLinearVelocity(armTarget.cpy().sub(b2dArmProjectile.getPosition()).nor().scl(maxRopeLength / 4));
     	} else {
     		b2dArmProjectile.setLinearVelocity(new Vector2());
     	}
@@ -193,7 +191,7 @@ public class PlayerBlob extends Group {
 	    		b2dArmProjectile.setLinearVelocity(b2dFigureBody.getLinearVelocity().add(b2dFigureBody.getPosition().sub(b2dArmProjectile.getPosition()).nor().scl(maxRopeLength / 4)));
     		} else {
     			//Zus�tzliche Masse in Skalar, wegen Kraft, damit pendeln m�glich ist
-    			b2dFigureBody.applyForce(b2dArmProjectile.getPosition().sub(b2dFigureBody.getPosition()).nor().scl(b2dFigureBody.getMass() * (maxRopeLength / 4) * (maxRopeLength / 4)), b2dFigureBody.getPosition(), true);
+    			b2dFigureBody.applyForce(b2dArmProjectile.getPosition().sub(b2dFigureBody.getPosition()).nor().scl(b2dFigureBody.getMass() * (maxRopeLength / 4 ) * (maxRopeLength / 4 )), b2dFigureBody.getPosition(), true);
     		}
     	} else {
 	    	b2dFigureArmJoint.setMaxLength(0.f);
