@@ -180,7 +180,7 @@ public class PlayerBlob extends Group {
     	//TODO Richtigen Offset f�r die Zunge eintragen
 
     	CircleShape armProjectileCircle = new CircleShape();
-    	armProjectileCircle.setRadius(0.f);
+    	armProjectileCircle.setRadius(2.f);
     	
     	FixtureDef armProjectileFixtureDef = new FixtureDef();
     	armProjectileFixtureDef.shape = armProjectileCircle;
