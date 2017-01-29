@@ -78,6 +78,7 @@ public class PlayerNature extends Group {
                 	case Input.Keys.D:
                 		sx = SPEED;
                 		break;
+                	default: break;
                 	}
             	} else {
                 	switch(key) {
@@ -89,6 +90,7 @@ public class PlayerNature extends Group {
                 	case Input.Keys.D:
                 		sx = 0;
                 		break;
+                	default: break;
                 	}
             		
             	}

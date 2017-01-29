@@ -2,6 +2,7 @@ package blob.two.nature;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
  */
 public abstract class GameStage extends Stage {
 
-    public static final Integer ID_PLAYER = 2;
+    public static final Integer ID_PLAYER = 1;
     public static final Integer ID_DIE = 2;
     public static final Integer ID_ARMPROJECTILE = 3;
     public float w, h;
@@ -106,16 +107,23 @@ public abstract class GameStage extends Stage {
                         continue;
 
                     String key = ps.get("Trigger", String.class);
+                    // TODO no exact positions
                     float x = trigersLayer.getTileWidth() * j;
                     float y = trigersLayer.getTileHeight() * i;
 
                     if (key.equals("Blob")) {
                         // set postion via physic!!
-                        playerBlob.b2dFigureBody.setTransform(x, y, 0);
+                        playerBlob.b2dFigureBody.setTransform(x,y, 0);
                         playerBlob.b2dArmProjectile.setTransform(x,y,0);
 
                     } else if (key.equals("Cloud")) {
                         playerNature.hitbox.setTransform(x, y, 0);
+                    } else  if (key.equals("Collectible")) {
+                        CircleShape s = new CircleShape();
+                        s.setRadius(40);
+                        Item a = new Item(b2dWorld, s, new Texture("kugel.png"));
+                        a.setPos(x, y);
+                        addActor(a);
                     } else {
                         System.out.println("Unknown key: " + key);
                     }
@@ -195,7 +203,6 @@ public abstract class GameStage extends Stage {
                     else if (isDie(a, b))
                         die();
                 } else if (a != null || b != null) {
-                	System.out.println("Contact detected 2");
                 	if (isArmCollision(a, b))
                 		playerBlob.lock();
                     else if (isArmCollision(b, a))
