@@ -183,6 +183,17 @@ public abstract class GameStage extends MyStage {
         
         playerNature.setPosition(playerNature.hitbox.getPosition().x, playerNature.hitbox.getPosition().y);
 
+        boolean needsFlip = false;
+        if ((angle > 90 || angle < -90) && !playerBlob.figure.currentFrame.isFlipX()){
+            needsFlip = true;
+        }
+        if ((angle < 90 && angle > -90 ) && playerBlob.figure.currentFrame.isFlipX()){
+            needsFlip = true;
+        }
+        System.out.println(angle);
+        if (dir.len() > 10 && needsFlip)
+            playerBlob.figure.currentFrame.flip(true, false);
+
         Vector3 oldCameraPosition = camera.position.cpy();
         camera.position.set(playerBlob.getX(), playerBlob.getY(), 0);
         Vector3 cameraDelta = camera.position.cpy().sub(oldCameraPosition);
