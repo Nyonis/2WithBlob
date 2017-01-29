@@ -163,7 +163,7 @@ public class PlayerBlob extends Group {
     	
     	FixtureDef figureFixtureDef = new FixtureDef();
     	figureFixtureDef.shape = b2dFigureShape;
-    	figureFixtureDef.density = 1.f;
+    	figureFixtureDef.density = 20.f;
     	figureFixtureDef.restitution = 0.f;
     	figureFixtureDef.friction = 0.1f;
 
@@ -259,6 +259,10 @@ public class PlayerBlob extends Group {
 		Vector2 rope = b2dArmProjectile.getPosition().cpy().sub(b2dFigureBody.getPosition());
 		reachedMaxLength = MathUtils.isEqual(rope.len(), maxRopeLength - 5);
 
+		Vector2 tmp = armTarget.cpy().scl(rope);
+		Vector2 vel = rope.cpy().scl((tmp.x + tmp.y) / rope.len2());
+		vel = armTarget.cpy().sub(vel);
+		
 		if (distance.len() < 1.f || reachedMaxLength) {
             b2dArmProjectile.setLinearVelocity(new Vector2());
         } else {
@@ -266,6 +270,26 @@ public class PlayerBlob extends Group {
         }
 
 	}
+    /*Neue extend Arm fehlgeschlagen
+    private void extendArm() {
+    	Vector2 rope = b2dArmProjectile.getPosition().cpy().sub(b2dFigureBody.getPosition());
+    	Vector2 distanceProjectileTarget = armTarget.cpy().sub(b2dArmProjectile.getPosition());
+    	Vector2 distanceFigureTarget = armTarget.cpy().sub(b2dFigureBody.getPosition());
+    	
+    	if(distanceProjectileTarget.len() < 1.f) {
+    		b2dArmProjectile.setLinearVelocity(new Vector2());
+    	} else if (MathUtils.isEqual(rope.len(), Math.min(distanceFigureTarget.len(), maxRopeLength) , 10.f)) {
+    		//Angular movement
+    		Vector2 tmp = armTarget.cpy().scl(rope);
+    		Vector2 vel = rope.cpy().scl((tmp.x + tmp.y) /rope.len2());
+    		vel = armTarget.cpy().sub(vel);
+    		
+    		b2dArmProjectile.setLinearVelocity(new Vector2());
+    		b2dArmProjectile.setAngularVelocity(rope.angleRad(distanceFigureTarget));
+    	} else {
+    		b2dArmProjectile.setLinearVelocity(distanceProjectileTarget.nor().scl(maxRopeLength / 2));
+    	}
+    }*/
     
     private void retractArm() {
     	//float currentJointLegth = b2dFigureArmJoint.getMaxLength();
