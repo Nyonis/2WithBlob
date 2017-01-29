@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /**
@@ -23,7 +22,6 @@ public class StartStage extends MyStage {
     private final float sx;
     private final float sy;
 
-    private Skin uiSkin;
     private BitmapFont font;
     private float fontY, fontX;
     private GlyphLayout layout;
@@ -50,10 +48,6 @@ public class StartStage extends MyStage {
     }
 
     private void makeUI() {
-
-        uiSkin = new Skin(Gdx.files.internal("uiskin.json"));
-
-
         font = new BitmapFont(Gdx.files.internal("doctor_azul_2.0.fnt"), Gdx.files.internal("doctor_azul_2.0.png"), false);
         layout = new GlyphLayout(font, "Press any key to start");
         fontX = (w - layout.width) / 2;

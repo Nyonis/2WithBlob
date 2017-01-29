@@ -21,6 +21,7 @@ public class Item extends Group {
         FixtureDef fDef = new FixtureDef();
         fDef.shape = s;
         fDef.filter.groupIndex = 1;
+        fDef.isSensor = true;
         this.body = w.createBody(bDef);
         this.body.createFixture(fDef).getBody();
         this.body.setUserData(this);

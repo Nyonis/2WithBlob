@@ -10,8 +10,14 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.ArrayList;
@@ -52,7 +58,7 @@ public abstract class GameStage extends MyStage {
 
         //Init physics with -10 units gravity in the y-axis
         //MUST be called before loadMap()
-        initPhysics(new Vector2(0f, -100.0f));
+        initPhysics(new Vector2(0f, -230.0f));
         
         // always render a tile map
         renderer = new OrthogonalTiledMapRenderer(map);
@@ -89,7 +95,8 @@ public abstract class GameStage extends MyStage {
         create();
     }
 
-    private void initPhysics(Vector2 gravity) {
+    @SuppressWarnings("static-access")
+	private void initPhysics(Vector2 gravity) {
         b2dWorld = new World(gravity, true);
         b2dWorld.setVelocityThreshold(1000.f);
     }
