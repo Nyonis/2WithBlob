@@ -39,7 +39,7 @@ public class MyController extends ControllerAdapter {
 		int i = 0;
 		for (Controller controller : Controllers.getControllers()) {
 			System.out.println("#" + i++ + ": " + controller.getName());
-			if(controller.getName().toLowerCase().contains("xbox")) {
+			if(controller.getName().toLowerCase().contains("box")) {
 				System.out.println("Supported Controller found: " + controller.getName());
 				connectedControllers.add(controller);
 				if(activeController == null) {

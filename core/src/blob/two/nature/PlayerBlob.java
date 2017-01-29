@@ -108,7 +108,8 @@ public class PlayerBlob extends Group {
         ControllerAdapter controllerHandler = new ControllerAdapter() {
         	@Override
         	public boolean axisMoved(Controller controller, int axisIndex, float value) {
-        		switch(axisIndex) {
+				System.out.println("moved");
+				switch(axisIndex) {
         		case MyController.XBox360Pad.AXIS_RIGHT_TRIGGER: 
         			if(value < -0.4f) {
         				activateExtendArm(new Vector2(
