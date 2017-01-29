@@ -77,7 +77,7 @@ public class StartStage extends MyStage {
     @Override
     public boolean keyUp(int keyCode) {
         super.keyUp(keyCode);
-        if (keyCode < Input.Keys.NUM_0 || keyCode < Input.Keys.NUM_9)
+        if (keyCode >= Input.Keys.NUM_0 && keyCode <= Input.Keys.NUM_9)
             startGame(keyCode - Input.Keys.NUM_0);
         return false;
     }
