@@ -114,7 +114,7 @@ public class PlayerBlob extends Group {
     	figureFixtureDef.shape = b2dFigureShape;
     	figureFixtureDef.density = 1.f;
     	figureFixtureDef.restitution = 0.f;
-    	figureFixtureDef.friction = 0.4f;
+    	figureFixtureDef.friction = 0.04f;
 
         figureFixtureDef.filter.groupIndex = 1;
         b2dFigureBody = b2dFigureBody.createFixture(figureFixtureDef).getBody();
