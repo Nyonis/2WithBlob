@@ -1,6 +1,7 @@
 package blob.two.nature;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -18,15 +19,27 @@ public class Number extends Image {
         setScale(s, s);
     }
 
-    public void changeNumber(int digit){
-        //((TextureRegionDrawable)this.getDrawable());
-    }
-
-    private static TextureRegion getRegion(int digit) {
-        if(texture == null)
-            texture = new Texture("zahlen.png");
+    public void change(int digit){
         int x = digit %4;
         int y = digit / 4;
-        return new TextureRegion(texture, x, y, 512/4, 384/3 );
+        if (digit > 9){
+            x = 2;
+            y = 2;
+        }
+        ((TextureRegionDrawable)this.getDrawable()).setRegion(new TextureRegion(new Texture("zahlen.png"), x * 128, y * 128, 128, 128));
+
     }
+
+    public static TextureRegion getRegion(int digit){
+
+        int x = digit %4;
+        int y = digit / 4;
+        if (digit > 9){
+            x = 2;
+            y = 2;
+        }
+        return new TextureRegion(new Texture("zahlen.png"), x * 128, y * 128, 128, 128);
+    }
+
+
 }

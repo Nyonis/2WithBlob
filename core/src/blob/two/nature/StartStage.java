@@ -1,6 +1,7 @@
 package blob.two.nature;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -47,19 +48,19 @@ public class StartStage extends MyStage {
         sy = (h - splash.getHeight()) / 2;
 
         makeUI();
-        
+
         MyController.getInstance().addListenerToActiveController(new ControllerAdapter() {
-        	@Override
-        	public boolean buttonUp(Controller controller, int buttonIndex) {
-        		startGame();
-        		return super.buttonUp(controller, buttonIndex);
-        	}
+            @Override
+            public boolean buttonUp(Controller controller, int buttonIndex) {
+                startGame(1);
+                return super.buttonUp(controller, buttonIndex);
+            }
         });
     }
 
     private void makeUI() {
         font = new BitmapFont(Gdx.files.internal("doctor_azul_2.0.fnt"), Gdx.files.internal("doctor_azul_2.0.png"), false);
-        layout = new GlyphLayout(font, "Press any key to start");
+        layout = new GlyphLayout(font, "Press X in (0, 1) to to start level X");
         fontX = (w - layout.width) / 2;
         fontY = (h + layout.height) / 2;
 
@@ -76,7 +77,8 @@ public class StartStage extends MyStage {
     @Override
     public boolean keyUp(int keyCode) {
         super.keyUp(keyCode);
-        startGame();
+        if (keyCode < Input.Keys.NUM_0 || keyCode < Input.Keys.NUM_9)
+            startGame(keyCode - Input.Keys.NUM_0);
         return false;
     }
 
@@ -90,8 +92,8 @@ public class StartStage extends MyStage {
 
     }
 
-    public void startGame() {
-        game.startGame();
+    public void startGame(int level) {
+        game.startGame(level);
     }
 
 

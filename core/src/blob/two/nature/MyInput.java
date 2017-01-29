@@ -32,6 +32,12 @@ public class MyInput implements InputProcessor {
 		mouseHandlers = new LinkedList<MouseHandler>();
 	}
 
+	public void clear(){
+	    keyHandlers.clear();
+	    mouseHandlers.clear();
+	    pressed.clear();
+    }
+
     public interface KeyPressHandler {
         public void press(boolean isDown, int key);
     }
