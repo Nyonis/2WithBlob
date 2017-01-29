@@ -2,6 +2,9 @@ package blob.two.nature;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerAdapter;
+import com.badlogic.gdx.controllers.mappings.Xbox;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -101,6 +104,47 @@ public class PlayerBlob extends Group {
 				}
 			}
         };
+        
+        ControllerAdapter controllerHandler = new ControllerAdapter() {
+        	@Override
+        	public boolean axisMoved(Controller controller, int axisIndex, float value) {
+        		switch(axisIndex) {
+        		case MyController.XBox360Pad.AXIS_RIGHT_TRIGGER: 
+        			if(value < -0.4f) {
+        				activateExtendArm(new Vector2(
+        						controller.getAxis(MyController.XBox360Pad.AXIS_RIGHT_X), 
+        						-controller.getAxis(MyController.XBox360Pad.AXIS_RIGHT_Y)).nor().scl(maxRopeLength).add(b2dFigureBody.getPosition()));
+        			} else if(value > 0.4f) {
+        				setRetractArm(true);
+        			} else {
+        				deactivateExtendArm();
+        				setRetractArm(false);
+        			};
+        			break;
+        		case MyController.XBox360Pad.AXIS_RIGHT_X:
+        		case MyController.XBox360Pad.AXIS_RIGHT_Y:
+        			if(controller.getAxis(MyController.XBox360Pad.AXIS_RIGHT_TRIGGER) < -0.4f) {
+        				resetArmTarget(new Vector2(
+        						controller.getAxis(MyController.XBox360Pad.AXIS_RIGHT_X), 
+        						-controller.getAxis(MyController.XBox360Pad.AXIS_RIGHT_Y)).nor().scl(maxRopeLength).add(b2dFigureBody.getPosition()));
+        			};
+        			break;
+        		default: break;
+        		}
+        		
+        		return super.axisMoved(controller, axisIndex, value);
+        	}
+        	
+        	@Override
+        	public boolean buttonUp(Controller controller, int buttonIndex) {
+        		if(buttonIndex == MyController.XBox360Pad.BUTTON_A) {
+        			releaseLock();
+        		}
+        		return super.buttonUp(controller, buttonIndex);
+        	}
+        };
+        
+        MyController.getInstance().addListenerToActiveController(controllerHandler);
         MyInput.getInstance().addKeyHandler(keyHandler);
         MyInput.getInstance().addMouseHandler(mouseHandler);
     }
@@ -121,7 +165,7 @@ public class PlayerBlob extends Group {
     	figureFixtureDef.shape = b2dFigureShape;
     	figureFixtureDef.density = 1.f;
     	figureFixtureDef.restitution = 0.f;
-    	figureFixtureDef.friction = 0.04f;
+    	figureFixtureDef.friction = 0.1f;
 
         figureFixtureDef.filter.groupIndex = 1;
         b2dFigureBody = b2dFigureBody.createFixture(figureFixtureDef).getBody();
@@ -171,9 +215,11 @@ public class PlayerBlob extends Group {
     }
     
     public void deactivateExtendArm() {
-    	Vector2 distance = b2dArmProjectile.getPosition().cpy().sub(b2dFigureBody.getPosition());
-    	b2dFigureArmJoint.setMaxLength(distance.len());
-    	extend = false;
+    	if(extend) {
+	    	Vector2 distance = b2dArmProjectile.getPosition().cpy().sub(b2dFigureBody.getPosition());
+	    	b2dFigureArmJoint.setMaxLength(distance.len());
+	    	extend = false;
+    	}
     }
     
     public void resetArmTarget(Vector2 target) {

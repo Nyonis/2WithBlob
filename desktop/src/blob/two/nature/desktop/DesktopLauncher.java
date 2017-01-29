@@ -15,7 +15,7 @@ public class DesktopLauncher {
 
     public static void startDemoLevel() {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        //config.fullscreen = true;
+        config.fullscreen = false;
         Dimension gd = Toolkit.getDefaultToolkit().getScreenSize();
         config.width = (int) ((int) gd.getWidth()/1.5f);
         config.height = (int) ((int) gd.getHeight()/1.5f);
