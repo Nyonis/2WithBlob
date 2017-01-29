@@ -52,7 +52,7 @@ public abstract class GameStage extends Stage {
 
         //Init physics with -10 units gravity in the y-axis
         //MUST be called before loadMap()
-        initPhysics(new Vector2(0.0f, -100.0f));
+        initPhysics(new Vector2(0f, -100.0f));
         
         // always render a tile map
         renderer = new OrthogonalTiledMapRenderer(map);
@@ -62,7 +62,16 @@ public abstract class GameStage extends Stage {
 
 
         PolygonShape shapeBlob = new PolygonShape();
-        shapeBlob.setAsBox(64, 40);
+        Vector2 textureDelta = new Vector2(64, 64);
+        Vector2[] vertices= new Vector2[7];
+        vertices[0] = new Vector2(104.f,101.f).sub(textureDelta);	
+        vertices[1] = new Vector2(52.f,104.f).sub(textureDelta);	
+        vertices[2] = new Vector2(-2.f,49.f).sub(textureDelta);	
+        vertices[3] = new Vector2(11.f,29.f).sub(textureDelta);	
+        vertices[4] = new Vector2(83.f,24.f).sub(textureDelta);	
+        vertices[5] = new Vector2(106.f,34.f).sub(textureDelta);	
+        vertices[6] = new Vector2(113.f,70.f).sub(textureDelta);
+        shapeBlob.set(vertices);
         playerBlob = new PlayerBlob(natureBlobGame.blobAtlas, shapeBlob, b2dWorld);
         this.addActor(playerBlob);
 
@@ -112,7 +121,7 @@ public abstract class GameStage extends Stage {
                     if (key.equals("Blob")) {
                         // set postion via physic!!
                         playerBlob.b2dFigureBody.setTransform(x, y, 0);
-                        playerBlob.b2dArmProjectile.setTransform(x,y,0);
+                        playerBlob.b2dArmProjectile.setTransform(x, y, 0);
 
                     } else if (key.equals("Cloud")) {
                         playerNature.hitbox.setTransform(x, y, 0);
@@ -152,7 +161,7 @@ public abstract class GameStage extends Stage {
             }
             toDestroy.clear();
         }
-
+        
         playerBlob.setPosition(playerBlob.b2dFigureBody.getPosition().x, playerBlob.b2dFigureBody.getPosition().y);
  
         // move cloud if it gets out of screen
