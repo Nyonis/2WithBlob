@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -21,6 +22,7 @@ public abstract class GameStage extends Stage {
 
     public static final Integer ID_PLAYER = 2;
     public static final Integer ID_DIE = 2;
+    public static final Integer ID_ARMPROJECTILE = 3;
     public float w, h;
     public OrthographicCamera camera;
 
@@ -63,8 +65,6 @@ public abstract class GameStage extends Stage {
         shapeBlob.setAsBox(64, 40);
         playerBlob = new PlayerBlob(natureBlobGame.blobAtlas, shapeBlob, b2dWorld);
         this.addActor(playerBlob);
-        // no visual player!!
-        // TODO playerNature = new PlayerNature();
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(128, 20);
@@ -139,7 +139,7 @@ public abstract class GameStage extends Stage {
 
     	//TODO Dynamisch an die Framerate anpassen
     	playerBlob.doPhysics();
-    	b2dWorld.step(1/60f, 6, 2);
+    	b2dWorld.step(1/60f, 3, 1);
     }
 
     @Override
@@ -165,7 +165,10 @@ public abstract class GameStage extends Stage {
         
         playerNature.setPosition(playerNature.hitbox.getPosition().x, playerNature.hitbox.getPosition().y);
 
+        Vector3 oldCameraPosition = camera.position.cpy();
         camera.position.set(playerBlob.getX(), playerBlob.getY(), 0);
+        Vector3 cameraDelta = camera.position.cpy().sub(oldCameraPosition);
+        playerBlob.addDeltaToArmTarget(new Vector2(cameraDelta.x, cameraDelta.y));
 
         camera.update();
         renderer.setView(camera);
@@ -191,6 +194,12 @@ public abstract class GameStage extends Stage {
                         toDestroy.add(((Item) b));
                     else if (isDie(a, b))
                         die();
+                } else if (a != null || b != null) {
+                	System.out.println("Contact detected 2");
+                	if (isArmCollision(a, b))
+                		playerBlob.lock();
+                    else if (isArmCollision(b, a))
+                    	playerBlob.lock();
                 }
             }
 
@@ -222,6 +231,10 @@ public abstract class GameStage extends Stage {
     private boolean isItem(Object a, Object b) {
         return  (b.equals(ID_PLAYER) && a instanceof Item);
 
+    }
+    
+    private boolean isArmCollision(Object a, Object b) {
+    	return (a != null && a.equals(ID_ARMPROJECTILE));
     }
 
     public void resize(int width, int height) {

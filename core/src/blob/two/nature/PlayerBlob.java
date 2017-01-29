@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -31,13 +32,16 @@ public class PlayerBlob extends Group {
 
     public Body b2dFigureBody;
 
+    public final Integer ID_ARMPROJECTILE = GameStage.ID_ARMPROJECTILE;
     public Body b2dArmProjectile;
 
     private Vector2 armTarget;
     private boolean extend;
-    public boolean locked;
+    private boolean retract;
     private float maxRopeLength;
     public RopeJoint b2dFigureArmJoint;
+    
+    public boolean locked;
 
 
     public PlayerBlob(TextureAtlas blobAtlas, Shape b2dFigureShape, World b2dWorld) {
@@ -60,9 +64,8 @@ public class PlayerBlob extends Group {
         KeyPressHandler keyHandler = new KeyPressHandler() {
 			@Override
 			public void press(boolean isDown, int key) {
-				if (key == Input.Keys.ENTER) {
-                	b2dArmProjectile.setType(BodyType.StaticBody);
-                	locked = true;
+				if (key == Input.Keys.O) {
+					releaseLock();
 				}
 			}
         };
@@ -71,13 +74,21 @@ public class PlayerBlob extends Group {
 			public void mouseAction(int x, int y, boolean isDown, boolean isLeft, boolean isDrag) {
 				if (isLeft) {
 					if (isDown) {
-						// TODO Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
-						activateExtendArm(new Vector2(/*v.*/x, /*v.*/y));
+						GameStage stage = (GameStage) getStage();
+						Vector3 v = stage.camera.unproject(new Vector3(x, y, 0));
+						activateExtendArm(new Vector2(v.x, v.y));
 					} else if (isDrag) {
-						// TODO Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
-						updateArmTarget(new Vector2(/*v.*/x, /*v.*/y));
+						GameStage stage = (GameStage) getStage();
+						Vector3 v = stage.camera.unproject(new Vector3(x, y, 0));
+						resetArmTarget(new Vector2(v.x, v.y));
 					} else { // isUp
 						deactivateExtendArm();
+					}
+				} else { // isRight
+					if (isDown) {
+						setRetractArm(true);
+					} else if (!isDrag) { // isUp
+						setRetractArm(false);
 					}
 				}
 			}
@@ -117,7 +128,7 @@ public class PlayerBlob extends Group {
     	//TODO Richtigen Offset f�r die Zunge eintragen
 
     	CircleShape armProjectileCircle = new CircleShape();
-    	armProjectileCircle.setRadius(1.f);
+    	armProjectileCircle.setRadius(0.f);
     	
     	FixtureDef armProjectileFixtureDef = new FixtureDef();
     	armProjectileFixtureDef.shape = armProjectileCircle;
@@ -126,6 +137,7 @@ public class PlayerBlob extends Group {
     	
     	b2dArmProjectile = b2dWorld.createBody(armProjectileDef);
     	b2dArmProjectile.createFixture(armProjectileFixtureDef);
+    	b2dArmProjectile.setUserData(ID_ARMPROJECTILE);
     	
     	armProjectileCircle.dispose();
     	
@@ -142,22 +154,47 @@ public class PlayerBlob extends Group {
     
     public void activateExtendArm(Vector2 target) {
     	armTarget = target;
+    	b2dFigureArmJoint.setMaxLength(maxRopeLength);
     	extend = true;
     }
     
-    public void updateArmTarget(Vector2 target) {
-    	armTarget = target;
-    }
-    
     public void deactivateExtendArm() {
+    	Vector2 distance = b2dArmProjectile.getPosition().cpy().sub(b2dFigureBody.getPosition());
+    	b2dFigureArmJoint.setMaxLength(distance.len());
     	extend = false;
     }
     
+    public void resetArmTarget(Vector2 target) {
+    	if(extend)
+    		armTarget = target;
+    }
+    
+    public void addDeltaToArmTarget(Vector2 delta) {
+    	if(extend)
+    		armTarget = armTarget.add(delta);
+    }
+    
+    public void setRetractArm(boolean retract) {
+    	this.retract = retract;
+    	
+    	if(!retract) {
+    		Vector2 distance = b2dArmProjectile.getPosition().cpy().sub(b2dFigureBody.getPosition());
+    		b2dFigureArmJoint.setMaxLength(distance.len());
+    		//L�sche Bewegung in Y-Rchtg um "hochspringen" zu vermeiden
+    		Vector2 vel = b2dFigureBody.getLinearVelocity();
+    		b2dFigureBody.setLinearVelocity(vel.x, 0);
+     	}
+    }
+    
+    public void releaseLock() {    	
+    	locked = false;
+    }
+    
+    public void lock() {
+    	locked = true;
+    }
+    
     private void extendArm() {
-    	float currentJointLength = b2dFigureArmJoint.getMaxLength();
-    	if(currentJointLength < maxRopeLength) {
-    		b2dFigureArmJoint.setMaxLength(currentJointLength + maxRopeLength/4);
-    	}
     	Vector2 distance = b2dArmProjectile.getPosition().cpy().sub(armTarget);
     	if(!(distance.len() < 1.f)) {
     		b2dArmProjectile.setLinearVelocity(armTarget.cpy().sub(b2dArmProjectile.getPosition()).nor().scl(maxRopeLength / 4));
@@ -167,22 +204,32 @@ public class PlayerBlob extends Group {
     }
     
     private void retractArm() {
-    	float currentJointLegth = b2dFigureArmJoint.getMaxLength();
-    	if(currentJointLegth > 0.f) {
+    	//float currentJointLegth = b2dFigureArmJoint.getMaxLength();
+    	Vector2 distance = b2dArmProjectile.getPosition().cpy().sub(b2dFigureBody.getPosition());
+    	if(!(distance.len() < 1.f)) {
     		if(!locked) {
 	    		b2dArmProjectile.setLinearVelocity(b2dFigureBody.getLinearVelocity().add(b2dFigureBody.getPosition().sub(b2dArmProjectile.getPosition()).nor().scl(maxRopeLength / 4)));
     		} else {
-    			//Zus�tzliche Masse in Skalar, wegen Impuls, damit pendeln m�glich ist
-    			b2dFigureBody.applyLinearImpulse(b2dArmProjectile.getPosition().sub(b2dFigureBody.getPosition()).nor().scl(b2dFigureBody.getMass() * maxRopeLength / 4), b2dFigureBody.getPosition(), true);
+    			//Zus�tzliche Masse in Skalar, wegen Kraft, damit pendeln m�glich ist
+    			b2dFigureBody.applyForce(b2dArmProjectile.getPosition().sub(b2dFigureBody.getPosition()).nor().scl(b2dFigureBody.getMass() * (maxRopeLength / 4 ) * (maxRopeLength / 4 )), b2dFigureBody.getPosition(), true);
     		}
-	    	b2dFigureArmJoint.setMaxLength(Math.max(0, b2dFigureArmJoint.getMaxLength() - maxRopeLength/4));
+    	} else {
+	    	b2dFigureArmJoint.setMaxLength(0.f);
     	}
     }
     
     public void doPhysics() {
-    	if(!locked && extend) {
-    		extendArm();
+    	if(locked) {
+    		b2dArmProjectile.setType(BodyType.StaticBody);
     	} else {
+        	b2dArmProjectile.setType(BodyType.DynamicBody);
+    	}
+    	if(extend) {
+    		extendArm();
+    	} else if (retract) {
+    		retractArm();
+    	} else if (!locked && !extend) {
+    		//Auto retract
     		retractArm();
     	}
     }
