@@ -226,8 +226,7 @@ public abstract class GameStage extends MyStage {
             needsFlip = true;
         }
 
-        System.out.println(dir.len());
-        if (dir.len() > 30  && needsFlip)
+        if (dir.len() > 30 && needsFlip)
             playerBlob.figure.currentFrame.flip(true, false);
 
         Vector3 oldCameraPosition = camera.position.cpy();
