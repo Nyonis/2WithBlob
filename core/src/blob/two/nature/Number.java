@@ -19,7 +19,7 @@ public class Number extends Image {
     }
 
     public void changeNumber(int digit){
-        ((TextureRegionDrawable)this.getDrawable()).set
+        //((TextureRegionDrawable)this.getDrawable());
     }
 
     private static TextureRegion getRegion(int digit) {
