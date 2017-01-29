@@ -1,6 +1,8 @@
 package blob.two.nature;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -45,6 +47,14 @@ public class StartStage extends MyStage {
         sy = (h - splash.getHeight()) / 2;
 
         makeUI();
+        
+        MyController.getInstance().addListenerToActiveController(new ControllerAdapter() {
+        	@Override
+        	public boolean buttonUp(Controller controller, int buttonIndex) {
+        		startGame();
+        		return super.buttonUp(controller, buttonIndex);
+        	}
+        });
     }
 
     private void makeUI() {

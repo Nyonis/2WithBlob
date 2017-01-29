@@ -71,7 +71,7 @@ public abstract class GameStage extends MyStage {
 
         //Init physics with -10 units gravity in the y-axis
         //MUST be called before loadMap()
-        initPhysics(new Vector2(0f, -230.0f));
+        initPhysics(new Vector2(0f, -10.0f));
         
         // always render a tile map
         renderer = new OrthogonalTiledMapRenderer(map);

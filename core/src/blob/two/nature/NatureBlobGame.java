@@ -41,6 +41,7 @@ public class NatureBlobGame extends ApplicationAdapter {
             }
         };
         MyInput.getInstance().addKeyHandler(closer);
+        MyController.getInstance();
 
         AssetManager manager = new AssetManager();
         manager.setLoader(TextureAtlas.class, new TextureAtlasLoader(new InternalFileHandleResolver()));
