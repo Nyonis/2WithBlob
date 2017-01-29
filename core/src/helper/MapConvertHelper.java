@@ -106,6 +106,7 @@ public class MapConvertHelper {
             worldVertices[i] = new Vector2();
             worldVertices[i].x = vertices[i * 2] ;
             worldVertices[i].y = vertices[i * 2 + 1] ;
+            worldVertices[i].scl(WORLD_FAC);
         }
 
         ChainShape chain = new ChainShape(); 

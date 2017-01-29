@@ -32,6 +32,7 @@ public abstract class GameStage extends MyStage {
     private final Number has;
     private final Number max;
     private final Group gCounter;
+    private final NatureBlobGame game;
     public OrthographicCamera camera;
 
     private OrthogonalTiledMapRenderer renderer;
@@ -49,7 +50,7 @@ public abstract class GameStage extends MyStage {
 
 
     public GameStage(NatureBlobGame natureBlobGame, String mapName) {
-
+        this.game = natureBlobGame;
         w = Gdx.graphics.getWidth();
         h = Gdx.graphics.getHeight();
 
@@ -197,6 +198,17 @@ public abstract class GameStage extends MyStage {
         b2dWorld.step(1 / 60f, 3, 1);
     }
 
+    private void eat() {
+
+        eatCounter++;
+        has.change(eatCounter);
+        if (eatCounter == 1){
+            System.out.println("Won!!!");
+            game.showMenu();
+        }
+    }
+
+
     @Override
     public void draw() {
         // render tiles first
@@ -281,14 +293,7 @@ public abstract class GameStage extends MyStage {
                 }
             }
 
-            private void eat() {
 
-                eatCounter++;
-                has.change(eatCounter);
-                if (eatCounter == collectibleCounter){
-                    System.out.println("Won!!!");
-                }
-            }
 
 
             @Override // TODO

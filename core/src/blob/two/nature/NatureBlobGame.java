@@ -80,4 +80,10 @@ public class NatureBlobGame extends ApplicationAdapter {
         stage.addInput();
         stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
+
+    public void showMenu() {
+        stage = startStage;
+        stage.addInput();
+        stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
 }
