@@ -80,8 +80,8 @@ public class DemoStage extends GameStage {
 
         final FileHandle soundFile = Gdx.files.internal("8bit_music_fadeout.mp3");
         Sound sound = Gdx.audio.newSound(soundFile);
-        sound.setLooping(0, true);
-    	sound.play(0.3f);
+    	long id = sound.play(1f);
+        sound.setLooping(id, true);
     }
 
 
