@@ -18,12 +18,11 @@ import java.util.ArrayList;
 /**
  * Created by me on 28.01.17.
  */
-public abstract class GameStage extends Stage {
+public abstract class GameStage extends MyStage {
 
     public static final Integer ID_PLAYER = 2;
     public static final Integer ID_DIE = 2;
     public static final Integer ID_ARMPROJECTILE = 3;
-    public float w, h;
     public OrthographicCamera camera;
 
     private OrthogonalTiledMapRenderer renderer;
@@ -246,11 +245,9 @@ public abstract class GameStage extends Stage {
     	return (a != null && a.equals(ID_ARMPROJECTILE));
     }
 
-    public void resize(int width, int height) {
-        w = width;
-        h = height;
 
-        getViewport().update(width, height, true);
+    @Override
+    public void addInput() {
+        Gdx.input.setInputProcessor(MyInput.getInstance());
     }
-
 }
