@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -21,6 +22,9 @@ import com.badlogic.gdx.utils.Array;
 
 import blob.two.nature.MyInput.KeyPressHandler;
 import blob.two.nature.MyInput.MouseHandler;
+import helper.MapConvertHelper;
+
+import static helper.MapConvertHelper.WORLD_FAC;
 
 /**
  * Created by me on 28.01.17.
@@ -44,9 +48,10 @@ public class PlayerBlob extends Group {
     
     public boolean locked;
     public boolean retractDone;
+	private boolean reachedMaxLength;
 
 
-    public PlayerBlob(TextureAtlas blobAtlas, Shape b2dFigureShape, World b2dWorld) {
+	public PlayerBlob(TextureAtlas blobAtlas, Shape b2dFigureShape, World b2dWorld) {
         this(b2dFigureShape, b2dWorld);
         Array<TextureRegion> regions = new Array<TextureRegion>();
         for (int i = 0; i < NUM_BLOB_IDLE_REGIONS; i++) {
@@ -57,7 +62,7 @@ public class PlayerBlob extends Group {
 
         figure = new AnimActor(regions);
         hand = new AnimActor(new Texture("zunge.png"));
-        maxRopeLength = 500.f;
+        maxRopeLength = 500.f * WORLD_FAC;
 
         hand.setPosition(0, 0);
 		this.addActor(hand);
@@ -79,11 +84,11 @@ public class PlayerBlob extends Group {
 					if (isDown) {
 						GameStage stage = (GameStage) getStage();
 						Vector3 v = stage.camera.unproject(new Vector3(x, y, 0));
-						activateExtendArm(new Vector2(v.x, v.y));
+						activateExtendArm(new Vector2(v.x, v.y).scl(WORLD_FAC));
 					} else if (isDrag) {
 						GameStage stage = (GameStage) getStage();
 						Vector3 v = stage.camera.unproject(new Vector3(x, y, 0));
-						resetArmTarget(new Vector2(v.x, v.y));
+						resetArmTarget(new Vector2(v.x, v.y).scl(WORLD_FAC));
 					} else { // isUp
 						deactivateExtendArm();
 					}
@@ -135,7 +140,8 @@ public class PlayerBlob extends Group {
     	
     	FixtureDef armProjectileFixtureDef = new FixtureDef();
     	armProjectileFixtureDef.shape = armProjectileCircle;
-    	armProjectileFixtureDef.density = 0.1f;
+    	armProjectileFixtureDef.density = 0f;
+
     	armProjectileFixtureDef.isSensor = true;
     	//armProjectileFixtureDef.filter.groupIndex = 1;
     	
@@ -203,13 +209,17 @@ public class PlayerBlob extends Group {
     }
     
     private void extendArm() {
-    	Vector2 distance = b2dArmProjectile.getPosition().cpy().sub(armTarget);
-    	if(!(distance.len() < 1.f)) {
-    		b2dArmProjectile.setLinearVelocity(armTarget.cpy().sub(b2dArmProjectile.getPosition()).nor().scl(maxRopeLength / 2));
-    	} else {
-    		b2dArmProjectile.setLinearVelocity(new Vector2());
-    	}
-    }
+    	Vector2 distance = armTarget.cpy().sub(b2dArmProjectile.getPosition());
+		Vector2 rope = b2dArmProjectile.getPosition().cpy().sub(b2dFigureBody.getPosition());
+		reachedMaxLength = MathUtils.isEqual(rope.len(), maxRopeLength - 5);
+
+		if (distance.len() < 1.f || reachedMaxLength) {
+            b2dArmProjectile.setLinearVelocity(new Vector2());
+        } else {
+            b2dArmProjectile.setLinearVelocity(distance.nor().scl(maxRopeLength / 2));
+        }
+
+	}
     
     private void retractArm() {
     	//float currentJointLegth = b2dFigureArmJoint.getMaxLength();

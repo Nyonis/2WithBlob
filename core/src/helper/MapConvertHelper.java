@@ -17,6 +17,9 @@ import com.badlogic.gdx.utils.Array;
 
 public class MapConvertHelper {
 
+    public final static float WORLD_FAC = .1f;
+    public final static float WORLD_SCALE = 10;
+
     public static Array<Body> mapToCollisionBody(Map map, String layerName, World world, Object uData) {
         MapObjects objects = map.getLayers().get(layerName).getObjects();
 
@@ -64,10 +67,10 @@ public class MapConvertHelper {
     private static PolygonShape getRectangle(RectangleMapObject rectangleObject) {
         Rectangle rectangle = rectangleObject.getRectangle();
         PolygonShape polygon = new PolygonShape();
-        Vector2 size = new Vector2((rectangle.x + rectangle.width * 0.5f),
-                                   (rectangle.y + rectangle.height * 0.5f ));
-        polygon.setAsBox(rectangle.width * 0.5f,
-                         rectangle.height * 0.5f ,
+        Vector2 size = new Vector2((rectangle.x + rectangle.width * 0.5f) * WORLD_FAC,
+                                   (rectangle.y + rectangle.height * 0.5f ) * WORLD_FAC);
+        polygon.setAsBox(rectangle.width * 0.5f * WORLD_FAC,
+                         rectangle.height * 0.5f * WORLD_FAC,
                          size,
                          0.0f);
         return polygon;
@@ -76,7 +79,7 @@ public class MapConvertHelper {
     private static CircleShape getCircle(CircleMapObject circleObject) {
         Circle circle = circleObject.getCircle();
         CircleShape circleShape = new CircleShape();
-        circleShape.setRadius(circle.radius );
+        circleShape.setRadius(circle.radius * WORLD_FAC);
         circleShape.setPosition(new Vector2(circle.x , circle.y ));
         return circleShape;
     }

@@ -3,6 +3,9 @@ package blob.two.nature;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import helper.MapConvertHelper;
+
+import java.util.Map;
 
 /**
  * Created by me on 28.01.17.
@@ -34,8 +37,8 @@ public class Item extends Group {
     }
 
     public void setPos(float x, float y) {
-        body.setTransform(x, y, 0);
-        this.setPosition(body.getPosition().x, body.getPosition().y);
+        body.setTransform(x * MapConvertHelper.WORLD_FAC, y* MapConvertHelper.WORLD_FAC, 0);
+        this.setPosition(x, y);
     }
 
 }

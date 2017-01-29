@@ -20,8 +20,12 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import helper.MapConvertHelper;
 
 import java.util.ArrayList;
+
+import static helper.MapConvertHelper.WORLD_FAC;
+import static helper.MapConvertHelper.WORLD_SCALE;
 
 /**
  * Created by me on 28.01.17.
@@ -31,6 +35,7 @@ public abstract class GameStage extends MyStage {
     public static final Integer ID_PLAYER = 1;
     public static final Integer ID_DIE = 2;
     public static final Integer ID_ARMPROJECTILE = 3;
+    private final OrthographicCamera cameraP;
     public OrthographicCamera camera;
 
     private OrthogonalTiledMapRenderer renderer;
@@ -43,6 +48,7 @@ public abstract class GameStage extends MyStage {
     private int[] preLayers;
     private TiledMapTileLayer foreGroundLayer;
     private ArrayList<Item> toDestroy = new ArrayList<Item>();
+    private int collectibleCounter;
 
 
     public GameStage(NatureBlobGame natureBlobGame, String mapName) {
@@ -55,6 +61,12 @@ public abstract class GameStage extends MyStage {
         camera.setToOrtho(false, w, h);
         camera.zoom = 2f;
         camera.update();
+
+        cameraP = new OrthographicCamera();
+        cameraP.setToOrtho(false, w, h);
+        cameraP.zoom = camera.zoom * WORLD_FAC;
+        cameraP.update();
+
         setViewport(new FitViewport(w, h, camera));
 
         //Init physics with -10 units gravity in the y-axis
@@ -71,19 +83,19 @@ public abstract class GameStage extends MyStage {
         PolygonShape shapeBlob = new PolygonShape();
         Vector2 textureDelta = new Vector2(64, 64);
         Vector2[] vertices= new Vector2[7];
-        vertices[0] = new Vector2(104.f,101.f).sub(textureDelta);	
-        vertices[1] = new Vector2(52.f,104.f).sub(textureDelta);	
-        vertices[2] = new Vector2(-2.f,49.f).sub(textureDelta);	
-        vertices[3] = new Vector2(11.f,29.f).sub(textureDelta);	
-        vertices[4] = new Vector2(83.f,24.f).sub(textureDelta);	
-        vertices[5] = new Vector2(106.f,34.f).sub(textureDelta);	
-        vertices[6] = new Vector2(113.f,70.f).sub(textureDelta);
+        vertices[0] = new Vector2(104.f,101.f).sub(textureDelta).scl(WORLD_FAC);
+        vertices[1] = new Vector2(52.f,104.f).sub(textureDelta).scl(WORLD_FAC);
+        vertices[2] = new Vector2(-2.f,49.f).sub(textureDelta).scl(WORLD_FAC);
+        vertices[3] = new Vector2(11.f,29.f).sub(textureDelta).scl(WORLD_FAC);
+        vertices[4] = new Vector2(83.f,24.f).sub(textureDelta).scl(WORLD_FAC);
+        vertices[5] = new Vector2(106.f,34.f).sub(textureDelta).scl(WORLD_FAC);
+        vertices[6] = new Vector2(113.f,70.f).sub(textureDelta).scl(WORLD_FAC);
         shapeBlob.set(vertices);
         playerBlob = new PlayerBlob(natureBlobGame.blobAtlas, shapeBlob, b2dWorld);
         this.addActor(playerBlob);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(128, 20);
+        shape.setAsBox(128* WORLD_FAC, 20 * WORLD_FAC);
         playerNature = new PlayerNature(shape, b2dWorld);
         this.addActor(playerNature);
 
@@ -92,6 +104,9 @@ public abstract class GameStage extends MyStage {
         // always render a tile map
         renderer = new OrthogonalTiledMapRenderer(map);
         renderer.setView(camera);
+
+
+        //addActor(new Number(0));
 
         create();
     }
@@ -106,6 +121,8 @@ public abstract class GameStage extends MyStage {
     private void loadMap(String name) {
         map = new TmxMapLoader().load(name);
         layerCount = map.getLayers().getCount();
+
+        collectibleCounter = 0;
 
         // trigger, foreground, wallobjects
         preLayers = new int[layerCount - 4];
@@ -132,14 +149,15 @@ public abstract class GameStage extends MyStage {
                     if (key.equals("Blob")) {
                         // set postion via physic!!
 
-                        playerBlob.b2dFigureBody.setTransform(x, y, 0);
-                        playerBlob.b2dArmProjectile.setTransform(x, y, 0);
+                        playerBlob.b2dFigureBody.setTransform(x * WORLD_FAC, y* WORLD_FAC, 0);
+                        playerBlob.b2dArmProjectile.setTransform(x* WORLD_FAC, y* WORLD_FAC, 0);
 
                     } else if (key.equals("Cloud")) {
-                        playerNature.hitbox.setTransform(x, y, 0);
+                        playerNature.hitbox.setTransform(x* WORLD_FAC, y* WORLD_FAC, 0);
                     } else  if (key.equals("Collectible")) {
+                        collectibleCounter ++;
                         CircleShape s = new CircleShape();
-                        s.setRadius(40);
+                        s.setRadius(32 * WORLD_FAC);
                         Item a = new Item(b2dWorld, s, new Texture("kugel.png"));
                         a.setPos(x + ts/2, y+ ts/2);
                         addActor(a);
@@ -180,12 +198,11 @@ public abstract class GameStage extends MyStage {
             toDestroy.clear();
         }
         
-        playerBlob.setPosition(playerBlob.b2dFigureBody.getPosition().x, playerBlob.b2dFigureBody.getPosition().y);
+        playerBlob.setPosition(playerBlob.b2dFigureBody.getPosition().x* WORLD_SCALE, playerBlob.b2dFigureBody.getPosition().y* WORLD_SCALE);
 
-
-
-        Vector2 end = playerBlob.b2dArmProjectile.getPosition();
-        Vector2 dir = new Vector2(playerBlob.getX(), playerBlob.getY()).sub(end);
+        Vector2 end = playerBlob.b2dArmProjectile.getPosition().cpy();
+        Vector2 dir = playerBlob.b2dFigureBody.getPosition().cpy().sub(end);
+        dir = dir.scl(WORLD_SCALE);
         float angle = (float) Math.atan2(-dir.y, -dir.x);
         angle *= MathUtils.radiansToDegrees;
         playerBlob.hand.setScaleX(dir.len() / playerBlob.hand.currentFrame.getRegionWidth());
@@ -199,7 +216,7 @@ public abstract class GameStage extends MyStage {
         		Math.min(playerNature.hitbox.getPosition().x, camera.position.x + this.getViewport().getScreenWidth()/2*camera.zoom),
         		Math.min(playerNature.hitbox.getPosition().y, camera.position.y + this.getViewport().getScreenHeight()/2*camera.zoom), 0f);
         
-        playerNature.setPosition(playerNature.hitbox.getPosition().x, playerNature.hitbox.getPosition().y);
+        playerNature.setPosition(playerNature.hitbox.getPosition().x* WORLD_SCALE , playerNature.hitbox.getPosition().y* WORLD_SCALE);
 
         boolean needsFlip = false;
         if ((angle > 90 || angle < -90) && !playerBlob.figure.currentFrame.isFlipX()){
@@ -208,19 +225,22 @@ public abstract class GameStage extends MyStage {
         if ((angle < 90 && angle > -90 ) && playerBlob.figure.currentFrame.isFlipX()){
             needsFlip = true;
         }
-        System.out.println(angle);
-        if (dir.len() > 10 && needsFlip)
+
+        System.out.println(dir.len());
+        if (dir.len() > 30  && needsFlip)
             playerBlob.figure.currentFrame.flip(true, false);
 
         Vector3 oldCameraPosition = camera.position.cpy();
         camera.position.set(playerBlob.getX(), playerBlob.getY(), 0);
         Vector3 cameraDelta = camera.position.cpy().sub(oldCameraPosition);
-        playerBlob.addDeltaToArmTarget(new Vector2(cameraDelta.x, cameraDelta.y).scl(1 / camera.zoom));
+        playerBlob.addDeltaToArmTarget(new Vector2(cameraDelta.x, cameraDelta.y).scl(1 / camera.zoom* WORLD_FAC));
 
         camera.update();
+        cameraP.position.set(camera.position.x * WORLD_FAC, camera.position.y * WORLD_FAC,0);
+        cameraP.update();
         renderer.setView(camera);
         renderer.render(preLayers);
-        b2dDebugRenderer.render(b2dWorld, camera.combined);
+        b2dDebugRenderer.render(b2dWorld, cameraP.combined);
 
         // make the scene draw stuff
         super.draw();
