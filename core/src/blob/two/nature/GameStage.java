@@ -114,6 +114,7 @@ public abstract class GameStage extends MyStage {
         }
         foreGroundLayer = (TiledMapTileLayer) map.getLayers().get("Foreground");
         TiledMapTileLayer trigersLayer = (TiledMapTileLayer) map.getLayers().get("Triggers");
+        float ts = trigersLayer.getTileWidth();
 
         for (int i = 0; i < trigersLayer.getHeight(); i++) {
             for (int j = 0; j < trigersLayer.getWidth(); j++) {
@@ -140,7 +141,7 @@ public abstract class GameStage extends MyStage {
                         CircleShape s = new CircleShape();
                         s.setRadius(40);
                         Item a = new Item(b2dWorld, s, new Texture("kugel.png"));
-                        a.setPos(x, y);
+                        a.setPos(x + ts/2, y+ ts/2);
                         addActor(a);
                     } else {
                         System.out.println("Unknown key: " + key);

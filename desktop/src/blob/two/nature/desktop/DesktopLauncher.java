@@ -17,8 +17,8 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         //config.fullscreen = true;
         Dimension gd = Toolkit.getDefaultToolkit().getScreenSize();
-        config.width = (int) gd.getWidth()/2;
-        config.height = (int) gd.getHeight()/2;
+        config.width = (int) ((int) gd.getWidth()/1.5f);
+        config.height = (int) ((int) gd.getHeight()/1.5f);
         new LwjglApplication(new NatureBlobGame(), config);
     }
 }
