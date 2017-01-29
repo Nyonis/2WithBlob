@@ -56,8 +56,7 @@ public class DemoStage extends GameStage {
                     dy = -TILE_SIZE;
                 }
                 if (keycode == Input.Keys.SPACE) {
-                	playerBlob.b2dArmProjectile.setType(BodyType.StaticBody);
-                	playerBlob.locked = true;
+                	playerBlob.releaseLock();;
                 }
 
                 playerBlob.setPosition(playerBlob.getX() + dx, playerBlob.getY() + dy);
@@ -80,10 +79,20 @@ public class DemoStage extends GameStage {
             }
             
             @Override
+            protected void onRightDown(int screenX, int screenY) {
+            	playerBlob.setRetractArm(true);
+            }
+            
+           @Override
+	        public void onRightClick(int screenX, int screenY, long duration) {
+	        	playerBlob.setRetractArm(false);
+	        }
+            
+            @Override
             public void onLeftDragged(int screenX, int screenY) {
             	Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
             	
-            	playerBlob.updateArmTarget(new Vector2(v.x, v.y));
+            	playerBlob.resetArmTarget(new Vector2(v.x, v.y));
             }
 
         };
