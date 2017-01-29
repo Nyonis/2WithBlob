@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
@@ -162,7 +163,16 @@ public abstract class GameStage extends MyStage {
         }
         
         playerBlob.setPosition(playerBlob.b2dFigureBody.getPosition().x, playerBlob.b2dFigureBody.getPosition().y);
- 
+
+
+
+        Vector2 end = playerBlob.b2dArmProjectile.getPosition();
+        Vector2 dir = new Vector2(playerBlob.getX(), playerBlob.getY()).sub(end);
+        float angle = (float) Math.atan2(-dir.y, -dir.x);
+        angle *= MathUtils.radiansToDegrees;
+        playerBlob.hand.setScaleX(dir.len() / playerBlob.hand.currentFrame.getRegionWidth());
+        playerBlob.hand.setRotation(angle);
+
         // move cloud if it gets out of screen
         playerNature.hitbox.setTransform(
         		Math.max(playerNature.hitbox.getPosition().x, camera.position.x - this.getViewport().getScreenWidth()/2*camera.zoom),
