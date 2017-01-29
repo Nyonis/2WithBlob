@@ -13,8 +13,9 @@ import java.util.List;
 public class MyInput implements InputProcessor {
 
 	private static MyInput theOne;
+    public ScrollHandler scrollHandler;
 
-	public static MyInput getInstance() {
+    public static MyInput getInstance() {
 		if (theOne == null) {
 			theOne = new MyInput();
 		}
@@ -37,6 +38,7 @@ public class MyInput implements InputProcessor {
 	    mouseHandlers.clear();
 	    pressed.clear();
     }
+
 
     public interface KeyPressHandler {
         public void press(boolean isDown, int key);
@@ -119,6 +121,8 @@ public class MyInput implements InputProcessor {
         return false;
     }
 
+
+
     public boolean isPressed(int keycode) {
         Boolean p = pressed.get(keycode);
         return p != null ? p : false;
@@ -152,6 +156,13 @@ public class MyInput implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
-        return false;
+	    if (scrollHandler != null)
+            scrollHandler.scroll(amount);
+
+	    return false;
+    }
+
+    public static  interface ScrollHandler{
+	    void scroll(int amount);
     }
 }

@@ -117,6 +117,16 @@ public abstract class GameStage extends MyStage {
         renderer = new OrthogonalTiledMapRenderer(map);
         renderer.setView(camera);
 
+        MyInput.getInstance().scrollHandler = new MyInput.ScrollHandler() {
+            @Override
+            public void scroll(int amount) {
+                camera.zoom += amount/10f;
+                cameraP.zoom = camera.zoom * WORLD_FAC;
+                camera.update();
+                cameraP.update();
+            }
+        };
+
         gCounter.toFront();
         create();
     }
@@ -202,7 +212,7 @@ public abstract class GameStage extends MyStage {
 
         eatCounter++;
         has.change(eatCounter);
-        if (eatCounter == 1){
+        if (eatCounter == collectibleCounter){
             System.out.println("Won!!!");
             game.showMenu();
         }
