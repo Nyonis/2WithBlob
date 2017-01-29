@@ -1,0 +1,48 @@
+
+buttons.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+button_background_a
+  rotate: false
+  xy: 1, 236
+  size: 262, 262
+  orig: 262, 262
+  offset: 0, 0
+  index: -1
+button_background_b
+  rotate: false
+  xy: 265, 236
+  size: 262, 262
+  orig: 262, 262
+  offset: 0, 0
+  index: -1
+button_background_c
+  rotate: false
+  xy: 529, 236
+  size: 262, 262
+  orig: 262, 262
+  offset: 0, 0
+  index: -1
+button_background_blau
+  rotate: false
+  xy: 1, 1
+  size: 233, 233
+  orig: 233, 233
+  offset: 0, 0
+  index: -1
+button_background_blau_kl
+  rotate: false
+  xy: 793, 434
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+patch_button
+  rotate: false
+  xy: 793, 434
+  size: 64, 64
+  split: 17, 17, 17, 17
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
