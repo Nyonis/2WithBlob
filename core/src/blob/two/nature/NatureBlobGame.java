@@ -50,7 +50,7 @@ public class NatureBlobGame extends ApplicationAdapter {
         blobAtlas = manager.get("blob.pack", TextureAtlas.class);
 
         startStage = new StartStage(this);
-        gameStage = new DemoStage(this);
+        gameStage = new DemoStage(this, 1);
 
         stage = startStage;
         stage.addInput();
@@ -75,8 +75,8 @@ public class NatureBlobGame extends ApplicationAdapter {
         stage.dispose();
     }
 
-    public void startGame() {
-        stage = gameStage;
+    public void startGame(int level) {
+        stage = new DemoStage(this, level);
         stage.addInput();
         stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
@@ -85,5 +85,6 @@ public class NatureBlobGame extends ApplicationAdapter {
         stage = startStage;
         stage.addInput();
         stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        MyInput.getInstance().clear();
     }
 }

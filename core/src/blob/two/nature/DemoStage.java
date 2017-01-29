@@ -16,8 +16,8 @@ public class DemoStage extends GameStage {
 
     //public MyInput input;
 
-    public DemoStage(NatureBlobGame game) {
-        super(game, "Level1.tmx");
+    public DemoStage(NatureBlobGame game, int level) {
+        super(game, "Level" + level + ".tmx");
         MapConvertHelper.mapToCollisionBody(map, "WallObjects", b2dWorld, null);
         MapConvertHelper.mapToCollisionBody(map, "SpikeObjects", b2dWorld, GameStage.ID_DIE);
 

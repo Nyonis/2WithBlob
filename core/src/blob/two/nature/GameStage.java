@@ -232,13 +232,13 @@ public abstract class GameStage extends MyStage {
 
         // move cloud if it gets out of screen
         playerNature.hitbox.setTransform(
-                Math.max(playerNature.hitbox.getPosition().x, camera.position.x - this.getViewport().getScreenWidth() / 2 * camera.zoom),
-                Math.max(playerNature.hitbox.getPosition().y, camera.position.y - this.getViewport().getScreenHeight() / 2 * camera.zoom), 0f);
+                Math.max(playerNature.hitbox.getPosition().x, (camera.position.x - this.getViewport().getScreenWidth() / 2 * camera.zoom)* WORLD_FAC),
+                Math.max(playerNature.hitbox.getPosition().y, (camera.position.y - this.getViewport().getScreenHeight() / 2 * camera.zoom)* WORLD_FAC), 0f);
         playerNature.hitbox.setTransform(
-                Math.min(playerNature.hitbox.getPosition().x, camera.position.x + this.getViewport().getScreenWidth() / 2 * camera.zoom),
-                Math.min(playerNature.hitbox.getPosition().y, camera.position.y + this.getViewport().getScreenHeight() / 2 * camera.zoom), 0f);
+                Math.min(playerNature.hitbox.getPosition().x, (camera.position.x + this.getViewport().getScreenWidth() / 2 * camera.zoom)* WORLD_FAC),
+                Math.min(playerNature.hitbox.getPosition().y, (camera.position.y + this.getViewport().getScreenHeight() / 2 * camera.zoom)* WORLD_FAC), 0f);
 
-        playerNature.setPosition(playerNature.hitbox.getPosition().x * WORLD_SCALE, playerNature.hitbox.getPosition().y * WORLD_SCALE);
+        playerNature.setPosition(playerNature.hitbox.getPosition().x* WORLD_SCALE, playerNature.hitbox.getPosition().y* WORLD_SCALE);
 
         boolean needsFlip = false;
         if ((angle > 90 || angle < -90) && !playerBlob.figure.currentFrame.isFlipX()) {
@@ -313,7 +313,7 @@ public abstract class GameStage extends MyStage {
     }
 
     private void die() {
-        Gdx.app.exit();
+        game.showMenu();
     }
 
 
