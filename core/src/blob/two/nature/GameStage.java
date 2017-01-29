@@ -208,7 +208,6 @@ public abstract class GameStage extends MyStage {
         if ((angle < 90 && angle > -90 ) && playerBlob.figure.currentFrame.isFlipX()){
             needsFlip = true;
         }
-        System.out.println(angle);
         if (dir.len() > 10 && needsFlip)
             playerBlob.figure.currentFrame.flip(true, false);
 

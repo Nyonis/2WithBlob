@@ -99,7 +99,7 @@ public class PlayerNature extends Group {
         };
         MyInput.getInstance().addKeyHandler(mover);
 
-        actor = new AnimActor(new Texture("cloud001_128x256.png"));
+        actor = new AnimActor(new Texture("Cloud.png"));
         this.addActor(actor);
 
         bDef = new BodyDef();

@@ -60,14 +60,12 @@ public class StartStage extends MyStage {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         super.touchDown(screenX, screenY, pointer, button);
-        System.out.println(screenX + " " + screenY);
         return false;
     }
 
     @Override
     public boolean keyUp(int keyCode) {
         super.keyUp(keyCode);
-        System.out.println("key up " + keyCode);
         startGame();
         return false;
     }
