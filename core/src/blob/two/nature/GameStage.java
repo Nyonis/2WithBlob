@@ -46,7 +46,7 @@ public abstract class GameStage extends Stage {
         // init camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false, w, h);
-        //camera.zoom = 2f;
+        camera.zoom = 2f;
         camera.update();
         setViewport(new FitViewport(w, h, camera));
 
@@ -91,6 +91,7 @@ public abstract class GameStage extends Stage {
 
     private void initPhysics(Vector2 gravity) {
         b2dWorld = new World(gravity, true);
+        b2dWorld.setVelocityThreshold(1000.f);
     }
 
 
@@ -177,7 +178,7 @@ public abstract class GameStage extends Stage {
         Vector3 oldCameraPosition = camera.position.cpy();
         camera.position.set(playerBlob.getX(), playerBlob.getY(), 0);
         Vector3 cameraDelta = camera.position.cpy().sub(oldCameraPosition);
-        playerBlob.addDeltaToArmTarget(new Vector2(cameraDelta.x, cameraDelta.y));
+        playerBlob.addDeltaToArmTarget(new Vector2(cameraDelta.x, cameraDelta.y).scl(1 / camera.zoom));
 
         camera.update();
         renderer.setView(camera);
@@ -204,7 +205,6 @@ public abstract class GameStage extends Stage {
                     else if (isDie(a, b))
                         die();
                 } else if (a != null || b != null) {
-                	System.out.println("Contact detected 2");
                 	if (isArmCollision(a, b))
                 		playerBlob.lock();
                     else if (isArmCollision(b, a))
