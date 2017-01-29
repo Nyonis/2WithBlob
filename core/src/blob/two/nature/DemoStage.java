@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 
 import helper.MapConvertHelper;
@@ -17,13 +19,23 @@ import helper.MapConvertHelper;
 public class DemoStage extends GameStage {
 
     public static int TILE_SIZE = 128;
+    private final Sound sound;
     private float move = 1f;
 
     public MyInput input;
 
+    public void makeEatMes() {
+        PolygonShape s = new PolygonShape();
+        s.setAsBox(40, 40);
+        Item a = new Item(b2dWorld, s, new Texture("kugel.png"));
+        a.setPos(300, 500);
+        addActor(a);
+    }
+
     public DemoStage(NatureBlobGame game) {
         super(game, "TestWorld2.tmx");
-        MapConvertHelper.mapToCollisionBdy(map, TILE_SIZE, b2dWorld);
+        MapConvertHelper.mapToCollisionBdy(map, "WallObjects", TILE_SIZE, b2dWorld, null);
+        MapConvertHelper.mapToCollisionBdy(map, "SpikeObjects", TILE_SIZE, b2dWorld, GameStage.ID_DIE);
 
 
         input = new MyInput() {
@@ -43,25 +55,37 @@ public class DemoStage extends GameStage {
                 if (keycode == Input.Keys.DOWN) {
                     dy = -TILE_SIZE;
                 }
+                if (keycode == Input.Keys.SPACE) {
+                	playerBlob.b2dArmProjectile.setType(BodyType.StaticBody);
+                	playerBlob.locked = true;
+                }
 
                 playerBlob.setPosition(playerBlob.getX() + dx, playerBlob.getY() + dy);
                 camera.translate(dx, dy);
 
                 return false;
             }
+
+            @Override
+            protected void onLeftDown(int screenX, int screenY) {
+            	// TODO Auto-generated method stub
+            	Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
+
+            	playerBlob.activateExtendArm(new Vector2(v.x, v.y));
+            }
             
             @Override
             public void onLeftClick(int screenX, int screenY, long duration) {
-            	// TODO Auto-generated method stub
-            	Vector2 vel = playerBlob.b2dFigureBody.getLinearVelocity();
-            	Vector2 pos = playerBlob.b2dFigureBody.getPosition();
+            	playerBlob.deactivateExtendArm();
+            }
+            
+            @Override
+            public void onLeftDragged(int screenX, int screenY) {
             	Vector3 v = camera.unproject(new Vector3(screenX, screenY, 0));
             	
-            	Vector2 impulse = new Vector2(v.x, v.y).sub(pos).scl(100000);
-            	
-            	playerBlob.b2dFigureBody.applyLinearImpulse(impulse, pos, true);
-            	//System.out.println(vel + ":" + pos + ":" + new Vector2(screenX, h - screenY) + ":" + impulse);
+            	playerBlob.updateArmTarget(new Vector2(v.x, v.y));
             }
+
         };
 
         input.addHandler(Input.Keys.ESCAPE, new MyInput.KeyPressHandler() {
@@ -78,8 +102,10 @@ public class DemoStage extends GameStage {
 
         Gdx.input.setInputProcessor(input);
 
+        makeEatMes();
+
         final FileHandle soundFile = Gdx.files.internal("8bit_music_fadeout.mp3");
-        Sound sound = Gdx.audio.newSound(soundFile);
+        sound = Gdx.audio.newSound(soundFile);
     	long id = sound.play(1f);
         sound.setLooping(id, true);
     }

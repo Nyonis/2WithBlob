@@ -13,6 +13,7 @@ public class MyInput implements InputProcessor {
     public HashMap<Integer, Boolean> pressed = new HashMap<Integer, Boolean>();
     public HashMap<Integer, KeyPressHandler> handlers = new HashMap<Integer, KeyPressHandler>();
     private long lefDownAt, rightDownAt;
+    private boolean leftDown, rightDown;
 
     public static interface KeyPressHandler {
         public void press(boolean isDown, int key);
@@ -56,35 +57,37 @@ public class MyInput implements InputProcessor {
 
         if (button == Input.Buttons.LEFT) {
             lefDownAt = System.currentTimeMillis();
+            leftDown = true;
             onLeftDown(screenX, screenY);
         } else if (button == Input.Buttons.RIGHT) {
             rightDownAt = System.currentTimeMillis();
+            rightDown = true;
             onRightDown(screenX, screenY);
         }
 
         return false;
     }
 
-    private void onRightDown(int screenX, int screenY) {
+    protected void onRightDown(int screenX, int screenY) {
         System.out.println("right down");
     }
 
-    private void onLeftDown(int screenX, int screenY) {
+    protected void onLeftDown(int screenX, int screenY) {
         System.out.println("left down");
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
         // no mulit pointer support
         if (pointer != 0)
             return false;
 
         if (button == Input.Buttons.LEFT) {
+            leftDown = false;
             onLeftClick(screenX, screenY, System.currentTimeMillis() - lefDownAt);
         } else if (button == Input.Buttons.RIGHT) {
+            rightDown = false;
             onRightClick(screenX, screenY, System.currentTimeMillis() - rightDownAt);
-
         }
 
 
@@ -103,9 +106,28 @@ public class MyInput implements InputProcessor {
     public void onLeftClick(int screenX, int screenY, long duration) {
         System.out.println("Left click");
     }
+    
+    public void onLeftDragged(int screenX, int screenY) {
+    	System.out.println("Left dragged");
+    }
+    
+    public void onRightDragged(int screenX, int screenY) {
+    	System.out.println("Right dragged");
+    }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+    	if(pointer != 0) {
+    		return false;
+    	}
+    	
+    	if(leftDown) {
+    		onLeftDragged(screenX, screenY);
+    	}
+    	
+    	if(rightDown) {
+    		onRightDragged(screenX, screenY);
+    	}
         return false;
     }
 
