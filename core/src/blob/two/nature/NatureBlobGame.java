@@ -14,8 +14,10 @@ import blob.two.nature.MyInput.KeyPressHandler;
 
 public class NatureBlobGame extends ApplicationAdapter {
 
-    private GameStage stage;
+    private MyStage stage;
+    private StartStage startStage;
     public TextureAtlas blobAtlas;
+    private DemoStage gameStage;
 
 
     private void initOpenGL() {
@@ -30,7 +32,6 @@ public class NatureBlobGame extends ApplicationAdapter {
         initOpenGL();
         Box2D.init();
 
-        Gdx.input.setInputProcessor(MyInput.getInstance());
         KeyPressHandler closer = new KeyPressHandler() {
             @Override
             public void press(boolean isDown, int key) {
@@ -47,7 +48,11 @@ public class NatureBlobGame extends ApplicationAdapter {
         manager.finishLoading();
         blobAtlas = manager.get("blob.pack", TextureAtlas.class);
 
-        stage = new DemoStage(this);
+        startStage = new StartStage(this);
+        gameStage = new DemoStage(this);
+
+        stage = startStage;
+        stage.addInput();
     }
 
     @Override
@@ -69,4 +74,9 @@ public class NatureBlobGame extends ApplicationAdapter {
         stage.dispose();
     }
 
+    public void startGame() {
+        stage = gameStage;
+        stage.addInput();
+        stage.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
 }

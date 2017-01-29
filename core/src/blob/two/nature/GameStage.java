@@ -19,12 +19,11 @@ import java.util.ArrayList;
 /**
  * Created by me on 28.01.17.
  */
-public abstract class GameStage extends Stage {
+public abstract class GameStage extends MyStage {
 
     public static final Integer ID_PLAYER = 1;
     public static final Integer ID_DIE = 2;
     public static final Integer ID_ARMPROJECTILE = 3;
-    public float w, h;
     public OrthographicCamera camera;
 
     private OrthogonalTiledMapRenderer renderer;
@@ -47,13 +46,13 @@ public abstract class GameStage extends Stage {
         // init camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false, w, h);
-        //camera.zoom = 2f;
+        camera.zoom = 2f;
         camera.update();
         setViewport(new FitViewport(w, h, camera));
 
         //Init physics with -10 units gravity in the y-axis
         //MUST be called before loadMap()
-        initPhysics(new Vector2(0.0f, -100.0f));
+        initPhysics(new Vector2(0f, -100.0f));
         
         // always render a tile map
         renderer = new OrthogonalTiledMapRenderer(map);
@@ -63,7 +62,16 @@ public abstract class GameStage extends Stage {
 
 
         PolygonShape shapeBlob = new PolygonShape();
-        shapeBlob.setAsBox(64, 40);
+        Vector2 textureDelta = new Vector2(64, 64);
+        Vector2[] vertices= new Vector2[7];
+        vertices[0] = new Vector2(104.f,101.f).sub(textureDelta);	
+        vertices[1] = new Vector2(52.f,104.f).sub(textureDelta);	
+        vertices[2] = new Vector2(-2.f,49.f).sub(textureDelta);	
+        vertices[3] = new Vector2(11.f,29.f).sub(textureDelta);	
+        vertices[4] = new Vector2(83.f,24.f).sub(textureDelta);	
+        vertices[5] = new Vector2(106.f,34.f).sub(textureDelta);	
+        vertices[6] = new Vector2(113.f,70.f).sub(textureDelta);
+        shapeBlob.set(vertices);
         playerBlob = new PlayerBlob(natureBlobGame.blobAtlas, shapeBlob, b2dWorld);
         this.addActor(playerBlob);
 
@@ -83,6 +91,7 @@ public abstract class GameStage extends Stage {
 
     private void initPhysics(Vector2 gravity) {
         b2dWorld = new World(gravity, true);
+        b2dWorld.setVelocityThreshold(1000.f);
     }
 
 
@@ -113,8 +122,9 @@ public abstract class GameStage extends Stage {
 
                     if (key.equals("Blob")) {
                         // set postion via physic!!
-                        playerBlob.b2dFigureBody.setTransform(x,y, 0);
-                        playerBlob.b2dArmProjectile.setTransform(x,y,0);
+
+                        playerBlob.b2dFigureBody.setTransform(x, y, 0);
+                        playerBlob.b2dArmProjectile.setTransform(x, y, 0);
 
                     } else if (key.equals("Cloud")) {
                         playerNature.hitbox.setTransform(x, y, 0);
@@ -160,7 +170,7 @@ public abstract class GameStage extends Stage {
             }
             toDestroy.clear();
         }
-
+        
         playerBlob.setPosition(playerBlob.b2dFigureBody.getPosition().x, playerBlob.b2dFigureBody.getPosition().y);
  
         // move cloud if it gets out of screen
@@ -176,7 +186,7 @@ public abstract class GameStage extends Stage {
         Vector3 oldCameraPosition = camera.position.cpy();
         camera.position.set(playerBlob.getX(), playerBlob.getY(), 0);
         Vector3 cameraDelta = camera.position.cpy().sub(oldCameraPosition);
-        playerBlob.addDeltaToArmTarget(new Vector2(cameraDelta.x, cameraDelta.y));
+        playerBlob.addDeltaToArmTarget(new Vector2(cameraDelta.x, cameraDelta.y).scl(1 / camera.zoom));
 
         camera.update();
         renderer.setView(camera);
@@ -244,11 +254,9 @@ public abstract class GameStage extends Stage {
     	return (a != null && a.equals(ID_ARMPROJECTILE));
     }
 
-    public void resize(int width, int height) {
-        w = width;
-        h = height;
 
-        getViewport().update(width, height, true);
+    @Override
+    public void addInput() {
+        Gdx.input.setInputProcessor(MyInput.getInstance());
     }
-
 }
