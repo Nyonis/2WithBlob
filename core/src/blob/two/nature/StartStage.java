@@ -60,7 +60,7 @@ public class StartStage extends MyStage {
 
     private void makeUI() {
         font = new BitmapFont(Gdx.files.internal("doctor_azul_2.0.fnt"), Gdx.files.internal("doctor_azul_2.0.png"), false);
-        layout = new GlyphLayout(font, "Press X in (0, 1) to to start level X");
+        layout = new GlyphLayout(font, "Press X in (0, 1, 2 ...) to to start level X");
         fontX = (w - layout.width) / 2;
         fontY = (h + layout.height) / 2;
 

@@ -15,10 +15,10 @@ public class DesktopLauncher {
 
     public static void startDemoLevel() {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.fullscreen = false;
+        config.fullscreen = true;
         Dimension gd = Toolkit.getDefaultToolkit().getScreenSize();
-        config.width = (int) ((int) gd.getWidth()/1.5f);
-        config.height = (int) ((int) gd.getHeight()/1.5f);
+        config.width = (int) ((int) gd.getWidth());
+        config.height = (int) ((int) gd.getHeight());
         new LwjglApplication(new NatureBlobGame(), config);
     }
 }

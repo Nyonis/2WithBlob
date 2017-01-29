@@ -75,7 +75,7 @@ public abstract class GameStage extends MyStage {
         renderer = new OrthogonalTiledMapRenderer(map);
         renderer.setView(camera);
 
-        b2dDebugRenderer = new Box2DDebugRenderer();
+        //b2dDebugRenderer = new Box2DDebugRenderer();
 
 
         PolygonShape shapeBlob = new PolygonShape();
@@ -271,7 +271,7 @@ public abstract class GameStage extends MyStage {
         cameraP.update();
         renderer.setView(camera);
         renderer.render(preLayers);
-        b2dDebugRenderer.render(b2dWorld, cameraP.combined);
+        //b2dDebugRenderer.render(b2dWorld, cameraP.combined);
         gCounter.setPosition(camera.position.x - w / 2 * camera.zoom + 10, camera.position.y + h / 2 * camera.zoom - 60);
 
         // make the scene draw stuff

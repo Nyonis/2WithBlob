@@ -15,7 +15,7 @@ public class PlayerNature extends Group {
 
     private static final long ON_TIME = 2000;
     private static final long WAIT_TIME = 3000 + ON_TIME;
-    public static int SPEED = 1000;
+    public static int SPEED = 30;
     private final AnimActor actor;
     private final BodyDef bDef;
 
@@ -110,7 +110,7 @@ public class PlayerNature extends Group {
         hitbox = world.createBody(bDef);
         fDef = new FixtureDef();
         fDef.shape = shape;
-        fDef.density = 1f;
+        fDef.density = .01f;
         fDef.friction = 0f;
         fDef.filter.categoryBits = 1;
         fDef.filter.maskBits = 2;
