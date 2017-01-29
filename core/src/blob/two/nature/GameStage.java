@@ -277,7 +277,7 @@ public abstract class GameStage extends MyStage {
         // make the scene draw stuff
         super.draw();
 
-        //renderer.renderTileLayer(foreGroundLayer);
+        renderer.render(new int[]{3});
 
         doPhysicsStep();
         b2dWorld.setContactListener(new ContactListener() {
