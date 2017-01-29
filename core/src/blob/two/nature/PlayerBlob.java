@@ -1,6 +1,7 @@
 package blob.two.nature;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -55,12 +56,13 @@ public class PlayerBlob extends Group {
         }
 
         figure = new AnimActor(regions);
-        //hand = new AnimActor();
+        hand = new AnimActor(new Texture("zunge.png"));
         maxRopeLength = 500.f;
 
-        //hand.setPosition(20, 20);
-        this.addActor(figure);
-        //this.addActor(hand);
+        hand.setPosition(0, 0);
+		this.addActor(hand);
+		this.addActor(figure);
+        hand.scaleBy(2, 1);
 
         KeyPressHandler keyHandler = new KeyPressHandler() {
 			@Override

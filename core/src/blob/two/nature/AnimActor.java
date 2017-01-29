@@ -6,15 +6,17 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by me on 28.01.17.
  */
-public class AnimActor extends Actor {
+public class AnimActor extends Image {
 
-    private TextureRegion currentFrame;
+    public TextureRegion currentFrame;
     private float animTime = 0;
+    public float xOff = 0, yOff = 0;
 
     public Animation anim;
 
@@ -40,9 +42,9 @@ public class AnimActor extends Actor {
         }
     }
 
-    @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.setColor(this.getColor());
-        batch.draw(currentFrame, this.getX(), this.getY());
+        batch.draw(currentFrame, getX(), getY(), getOriginX(), getOriginY(),
+                currentFrame.getRegionWidth(), currentFrame.getRegionHeight(), getScaleX(), 1, getRotation());
     }
 }
